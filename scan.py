@@ -1,7 +1,7 @@
 import os
 import json
 from flask import Flask, render_template_string, request, redirect, url_for, send_from_directory, jsonify
-from urllib.parse import unquote
+from urllib.parse import unquote, quote
 
 app = Flask(__name__)
 
@@ -12,11 +12,11 @@ DATA_FILE = 'media.json'
 DEFAULT_TITLE = "Farewell Party"
 DEFAULT_DATE = "SOSE '26"
 
-# GitHub LFS URI Configuration
-GITHUB_USERNAME = 'amdivyansh'
+# --- GITHUB LFS CONFIG ---
+GITHUB_USER = 'amdivyansh'
 GITHUB_REPO = 'session-2026'
 GITHUB_BRANCH = 'main'
-GITHUB_LFS_BASE = f'https://media.githubusercontent.com/media/{GITHUB_USERNAME}/{GITHUB_REPO}/{GITHUB_BRANCH}'
+GITHUB_LFS_BASE = f"https://media.githubusercontent.com/media/{GITHUB_USER}/{GITHUB_REPO}/refs/heads/{GITHUB_BRANCH}"
 
 # Supported Extensions
 IMAGE_EXTS = {'.jpg', '.jpeg', '.png', '.gif', '.webp'}
@@ -192,7 +192,9 @@ HTML_TEMPLATE = """
 
 def make_lfs_uri(filename):
     """Construct GitHub LFS URI for a media file."""
-    return f"{GITHUB_LFS_BASE}/{MEDIA_DIR}/{filename}"
+    # Ensure filename is URL-encoded but keep parens readable
+    encoded_filename = quote(filename, safe='/()')
+    return f"{GITHUB_LFS_BASE}/{MEDIA_DIR}/{encoded_filename}"
 
 def load_data():
     """Read the JSON file and return list."""
@@ -238,10 +240,12 @@ def get_untracked_files():
         if 'src' in item:
             src = item['src']
             # Robust filename extraction: take last part of URL/path and unquote
-            filename = unquote(src.split('/')[-1])
+            # unquote handles %20 -> space, %28 -> (, etc.
+            filename_raw = src.split('/')[-1]
+            filename = unquote(filename_raw).strip()
             tracked_files.add(filename)
             
-            # Duplicate detection
+            # Duplicate detection (check strictly by src string first)
             if src in seen_src:
                 duplicates.append(src)
             else:
