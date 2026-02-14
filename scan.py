@@ -141,7 +141,7 @@ HTML_TEMPLATE = """
                     <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-xl">
                         <h2 class="text-xl font-bold text-white mb-6">Add Media Details</h2>
 
-                        <form action="{{ url_for('save_media') }}" method="POST" id="media-form">
+                        <form action="{{ url_for('save_media') }}" method="POST" id="media-form" accept-charset="UTF-8">
                             <input type="hidden" name="filename" value="{{ filename }}">
                             <input type="hidden" name="file_type" value="{{ file_type }}">
 
@@ -323,21 +323,39 @@ def save_media():
     extra_tags_input = request.form.get('extra_tags', '')
     extra_tags = [t.strip() for t in extra_tags_input.split(',') if t.strip()]
 
+
     # Combine all tags
     all_tags = extra_tags
 
     # Build GitHub LFS URI
     lfs_uri = make_lfs_uri(filename)
 
+    # Helper to fix potential encoding issues (Mojibake)
+    def fix_text(text):
+        if not text: return text
+        try:
+            # excessive defensive decoding:
+            # If the text was received as windows-1252 bytes misinterpreted as UTF-8,
+            # we try to reverse it.
+            # E.g. "ðŸ™‚" (4 chars) -> bytes -> "🙂"
+            return text.encode('cp1252').decode('utf-8')
+        except UnicodeEncodeError:
+            # If it contains characters not in cp1252 (like real emojis), 
+            # then it's likely already correct (or a different issue).
+            return text
+        except UnicodeDecodeError:
+            # If the bytes aren't valid utf-8, give up
+            return text
+
     # Construct the entry with LFS URIs
     entry = {
         "id": 0,  # Placeholder, set in save_entry
         "type": file_type,
         "src": lfs_uri,
-        "title": title,
-        "description": desc,
-        "date": date,
-        "tags": all_tags
+        "title": fix_text(title),
+        "description": fix_text(desc),
+        "date": fix_text(date),
+        "tags": [fix_text(t) for t in all_tags]
     }
 
     if file_type == 'video':

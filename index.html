@@ -429,6 +429,43 @@
             }
         }
 
+        /* Media Count Badge */
+        .media-count-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 9999px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            font-family: 'Space Grotesk', monospace;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .media-count-badge:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 0, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.2);
+        }
+
+        .media-count-badge i {
+            color: #FF00FF;
+        }
+
+        .media-count-badge .count {
+            color: #fff;
+            font-weight: bold;
+        }
+
         /* Loader */
         .loader-container {
             position: fixed;
@@ -578,7 +615,7 @@
 
             <h1
                 class="font-display text-7xl sm:text-8xl md:text-9xl mb-8 leading-[0.9] tracking-tighter drop-shadow-[0_0_25px_rgba(189,0,255,0.4)]">
-                <span class="block text-white animate-slide-up" style="animation-delay: 0.1s;">SOSE</span>
+                <span class="block text-white animate-slide-up" style="animation-delay: 0.1s;">SOSE INA</span>
                 <span
                     class="block text-transparent bg-clip-text bg-gradient-to-r from-party-cyan via-white to-party-pink animate-slide-up bg-[length:200%_auto] hover:bg-right transition-all duration-500"
                     style="animation-delay: 0.3s;">BATCH '26</span>
@@ -614,7 +651,7 @@
             <!-- Media Count Badge -->
             <div class="flex justify-center">
                 <div class="media-count-badge" id="media-count-badge" style="display: none;">
-                    <i class="fa-solid fa-images text-party-pink" style="font-size: 10px;"></i>
+                    <i class="fa-solid fa-images text-party-pink" style="font-size: 14px;"></i>
                     <span>Showing <span class="count" id="media-count">0</span> items</span>
                 </div>
             </div>
@@ -986,9 +1023,9 @@
                             <div class="media-skeleton"></div>
                             ${item.type === 'video' ? `
                                 ${(item.thumbnail && !item.thumbnail.match(/\.(mp4|mov|webm|ogg)$/i)) ? `
-                                    <img data-src="${item.thumbnail}" alt="${item.title}" loading="lazy" onload="this.parentElement.querySelector('.media-skeleton')?.remove()" onerror="this.parentElement.querySelector('.media-skeleton')?.remove()" class="lazy-media opacity-90 group-hover:opacity-100 transition-opacity duration-700">
+                                    <img ${index < 20 ? `src="${item.thumbnail}"` : `data-src="${item.thumbnail}"`} alt="${item.title}" ${index < 20 ? '' : 'loading="lazy"'} onload="this.parentElement.querySelector('.media-skeleton')?.remove()" onerror="this.parentElement.querySelector('.media-skeleton')?.remove()" class="${index < 20 ? '' : 'lazy-media'} opacity-90 group-hover:opacity-100 transition-opacity duration-700">
                                 ` : `
-                                    <video data-src="${item.src}" preload="none" muted playsinline onloadeddata="this.parentElement.querySelector('.media-skeleton')?.remove()" onerror="this.parentElement.querySelector('.media-skeleton')?.remove()" class="lazy-media opacity-90 group-hover:opacity-100 transition-opacity duration-700"></video>
+                                    <video ${index < 20 ? `src="${item.src}"` : `data-src="${item.src}"`} ${index < 20 ? 'preload="metadata"' : 'preload="none"'} muted playsinline onloadeddata="this.parentElement.querySelector('.media-skeleton')?.remove()" onerror="this.parentElement.querySelector('.media-skeleton')?.remove()" class="${index < 20 ? '' : 'lazy-media'} opacity-90 group-hover:opacity-100 transition-opacity duration-700"></video>
                                 `}
                                 <div class="absolute inset-0 flex items-center justify-center" style="z-index:3">
                                     <div class="w-14 h-14 rounded-full bg-black/40 backdrop-blur-xl border border-white/30 flex items-center justify-center group-hover:scale-110 transition-transform shadow-[0_0_30px_rgba(255,0,255,0.4)]">
@@ -996,7 +1033,7 @@
                                     </div>
                                 </div>
                             ` : `
-                                <img data-src="${item.src}" alt="${item.title}" loading="lazy" onload="this.parentElement.querySelector('.media-skeleton')?.remove()" onerror="this.parentElement.querySelector('.media-skeleton')?.remove()" class="lazy-media opacity-90 group-hover:opacity-100 transition-opacity duration-700">
+                                <img ${index < 20 ? `src="${item.src}"` : `data-src="${item.src}"`} alt="${item.title}" ${index < 20 ? '' : 'loading="lazy"'} onload="this.parentElement.querySelector('.media-skeleton')?.remove()" onerror="this.parentElement.querySelector('.media-skeleton')?.remove()" class="${index < 20 ? '' : 'lazy-media'} opacity-90 group-hover:opacity-100 transition-opacity duration-700">
                             `}
                             
                             <!-- Overlay Gradient -->
