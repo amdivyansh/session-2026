@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOSE '26 | The Final Party</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Righteous&family=Outfit:wght@300;400;600;800&family=Great+Vibes&family=Space+Grotesk:wght@300;500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Configuration for Tailwind -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        display: ['Righteous', 'cursive'],
+                        script: ['Great Vibes', 'cursive'],
+                        mono: ['Space Grotesk', 'monospace'],
+                    },
+                    colors: {
+                        party: {
+                            bg: '#030014', // Darker, richer black/violet
+                            card: 'rgba(255, 255, 255, 0.03)',
+                            border: 'rgba(255, 255, 255, 0.1)',
+                            pink: '#FF00FF',
+                            purple: '#9D00FF',
+                            cyan: '#00F0FF',
+                            gold: '#FFD700',
+                        }
+                    },
+                    backgroundImage: {
+                        'neon-gradient': 'linear-gradient(to right, #FF00FF, #9D00FF, #00F0FF)',
+                        'disco-gradient': 'radial-gradient(circle at 50% 50%, rgba(157, 0, 255, 0.2), rgba(3, 0, 20, 0))',
+                    },
+                    boxShadow: {
+                        'neon-pink': '0 0 10px rgba(255, 0, 255, 0.5), 0 0 20px rgba(255, 0, 255, 0.3)',
+                        'neon-cyan': '0 0 10px rgba(0, 240, 255, 0.5), 0 0 20px rgba(0, 240, 255, 0.3)',
+                        'card-hover': '0 20px 40px -10px rgba(0,0,0,0.5)',
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'slide-up': 'slideUp 0.8s ease-out forwards',
+                        'spin-slow': 'spin 12s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        glow: {
+                            '0%': { filter: 'drop-shadow(0 0 2px #ff00ff)' },
+                            '100%': { filter: 'drop-shadow(0 0 10px #00eaff)' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(40px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #030014;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* Film Grain Overlay */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Ambient Orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.5;
+            animation: float 10s infinite;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #030014;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #FF00FF, #00F0FF);
+            border-radius: 3px;
+        }
+
+        /* Masonry Layout */
+        .masonry-grid {
+            column-count: 1;
+            column-gap: 2rem;
+        }
+
+        @media (min-width: 640px) {
+            .masonry-grid {
+                column-count: 2;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .masonry-grid {
+                column-count: 3;
+            }
+        }
+
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 2rem;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        /* Loader */
+        .loader-container {
+            position: fixed;
+            inset: 0;
+            background: #030014;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .equalizer {
+            display: flex;
+            gap: 4px;
+            height: 40px;
+            align-items: flex-end;
+        }
+
+        .bar {
+            width: 8px;
+            background: linear-gradient(to top, #FF00FF, #00F0FF);
+            animation: equalize 1s ease-in-out infinite;
+        }
+
+        .bar:nth-child(1) {
+            animation-delay: 0.1s;
+            height: 60%;
+        }
+
+        .bar:nth-child(2) {
+            animation-delay: 0.3s;
+            height: 80%;
+        }
+
+        .bar:nth-child(3) {
+            animation-delay: 0.5s;
+            height: 40%;
+        }
+
+        .bar:nth-child(4) {
+            animation-delay: 0.2s;
+            height: 90%;
+        }
+
+        .bar:nth-child(5) {
+            animation-delay: 0.4s;
+            height: 50%;
+        }
+
+        @keyframes equalize {
+
+            0%,
+            100% {
+                height: 20%;
+            }
+
+            50% {
+                height: 100%;
+            }
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background-color: #f0f;
+            animation: confetti-fall 5s linear forwards;
+            z-index: 40;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-10vh) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(110vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* ========================================
+           STUDENT DROPDOWN STYLES
+           ======================================== */
+        .student-dropdown-wrapper {
+            position: relative;
+            z-index: 45;
+        }
+
+        .student-dropdown-trigger {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            height: 48px;
+            border-radius: 9999px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(157, 0, 255, 0.3);
+            color: #9D00FF;
+            font-weight: 700;
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+            backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+            box-sizing: border-box;
+        }
+
+        .student-dropdown-trigger:hover {
+            background: rgba(157, 0, 255, 0.15);
+            border-color: rgba(157, 0, 255, 0.6);
+            box-shadow: 0 0 15px rgba(157, 0, 255, 0.3), 0 0 30px rgba(157, 0, 255, 0.1);
+        }
+
+        .student-dropdown-trigger.active {
+            background: white;
+            color: black;
+            border-color: transparent;
+            box-shadow: 0 0 25px rgba(157, 0, 255, 0.4);
+        }
+
+        .student-dropdown-trigger .chevron-icon {
+            transition: transform 0.3s ease;
+            font-size: 11px;
+        }
+
+        .student-dropdown-trigger.open .chevron-icon {
+            transform: rotate(180deg);
+        }
+
+        .student-dropdown-trigger .select-count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #9D00FF, #00F0FF);
+            color: white;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 0 5px;
+        }
+
+
+        /* --- DESKTOP DROPDOWN PANEL (opens UPWARD) --- */
+        .student-dropdown-panel {
+            position: absolute;
+            bottom: calc(100% + 12px);
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            width: 300px;
+            max-height: 0;
+            overflow: hidden;
+            background: rgba(10, 5, 30, 0.97);
+            border: 1px solid rgba(157, 0, 255, 0.25);
+            border-radius: 16px;
+            backdrop-filter: blur(24px);
+            box-shadow: 0 -15px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(157, 0, 255, 0.15);
+            z-index: 9999;
+            opacity: 0;
+            transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.25s ease,
+                transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .student-dropdown-panel.open {
+            max-height: 380px;
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            overflow: hidden;
+        }
+
+        /* Arrow pointer at bottom of panel (pointing down to trigger) */
+        .student-dropdown-panel::before {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%) rotate(45deg);
+            width: 12px;
+            height: 12px;
+            background: rgba(10, 5, 30, 0.97);
+            border-right: 1px solid rgba(157, 0, 255, 0.25);
+            border-bottom: 1px solid rgba(157, 0, 255, 0.25);
+            z-index: 1;
+        }
+
+        .student-search-box {
+            position: relative;
+            padding: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .student-search-box input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: white;
+            font-family: 'Space Grotesk', monospace;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            box-sizing: border-box;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .student-search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .student-search-box input:focus {
+            border-color: rgba(157, 0, 255, 0.5);
+            box-shadow: 0 0 12px rgba(157, 0, 255, 0.15);
+        }
+
+        .student-search-box .search-icon {
+            position: absolute;
+            left: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(157, 0, 255, 0.5);
+            font-size: 13px;
+            pointer-events: none;
+        }
+
+        .student-list {
+            max-height: 270px;
+            overflow-y: auto;
+            padding: 6px;
+            overscroll-behavior: contain;
+        }
+
+        .student-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .student-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .student-list::-webkit-scrollbar-thumb {
+            background: rgba(157, 0, 255, 0.3);
+            border-radius: 2px;
+        }
+
+        .student-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            border: 1px solid transparent;
+        }
+
+        .student-item:hover {
+            background: rgba(157, 0, 255, 0.12);
+        }
+
+        .student-item:active {
+            background: rgba(157, 0, 255, 0.2);
+            transform: scale(0.98);
+        }
+
+        .student-item.selected {
+            background: linear-gradient(135deg, rgba(157, 0, 255, 0.2), rgba(0, 240, 255, 0.1));
+            border: 1px solid rgba(157, 0, 255, 0.3);
+        }
+
+        /* Checkbox indicator for multi-select */
+        .student-item .check-indicator {
+            width: 20px;
+            height: 20px;
+            border-radius: 6px;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+            margin-left: auto;
+        }
+
+        .student-item .check-indicator i {
+            font-size: 10px;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.2s ease;
+            color: white;
+        }
+
+        .student-item.selected .check-indicator {
+            background: linear-gradient(135deg, #9D00FF, #00F0FF);
+            border-color: transparent;
+        }
+
+        .student-item.selected .check-indicator i {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .student-item .student-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 13px;
+            flex-shrink: 0;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, rgba(157, 0, 255, 0.4), rgba(0, 240, 255, 0.3));
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .student-item .student-name {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.85);
+            transition: color 0.2s ease;
+        }
+
+        .student-item:hover .student-name {
+            color: white;
+        }
+
+        .student-item .student-tag {
+            font-family: 'Space Grotesk', monospace;
+            font-size: 10px;
+            color: rgba(157, 0, 255, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            flex-shrink: 0;
+        }
+
+        .student-no-results {
+            text-align: center;
+            padding: 24px 20px;
+            color: rgba(255, 255, 255, 0.3);
+            font-family: 'Space Grotesk', monospace;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Multi-select chips container */
+        .student-chips-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 12px;
+            min-height: 0;
+        }
+
+        .student-active-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 10px 5px 6px;
+            border-radius: 9999px;
+            background: linear-gradient(135deg, rgba(157, 0, 255, 0.25), rgba(0, 240, 255, 0.15));
+            border: 1px solid rgba(157, 0, 255, 0.4);
+            backdrop-filter: blur(12px);
+            animation: slideUp 0.3s ease-out forwards;
+            cursor: default;
+        }
+
+        .student-active-chip .chip-avatar {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 9px;
+            background: linear-gradient(135deg, #9D00FF, #00F0FF);
+            color: white;
+        }
+
+        .student-active-chip .chip-name {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 11px;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .student-active-chip .chip-close {
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 9px;
+            transition: all 0.2s ease;
+        }
+
+        .student-active-chip .chip-close:hover {
+            background: rgba(255, 0, 255, 0.4);
+            color: white;
+        }
+
+        /* Clear all button */
+        .student-clear-all {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 5px 12px;
+            border-radius: 9999px;
+            background: rgba(255, 0, 255, 0.1);
+            border: 1px solid rgba(255, 0, 255, 0.3);
+            color: rgba(255, 0, 255, 0.8);
+            font-family: 'Space Grotesk', monospace;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .student-clear-all:hover {
+            background: rgba(255, 0, 255, 0.2);
+            color: white;
+        }
+
+        /* Media count badge */
+        .media-count-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            font-family: 'Space Grotesk', monospace;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 16px;
+        }
+
+        .media-count-badge .count {
+            color: #00F0FF;
+            font-weight: 700;
+        }
+
+        /* ========================================
+           MOBILE RESPONSIVE
+           ======================================== */
+
+        /* Mobile: normal downward-opening dropdown */
+        @media (max-width: 639px) {
+            .student-dropdown-trigger {
+                padding: 10px 20px;
+                height: 44px;
+                font-size: 13px;
+                gap: 6px;
+                width: 100%;
+            }
+
+            .student-dropdown-wrapper {
+                width: 100%;
+            }
+
+            /* Normal dropdown opening downward on mobile */
+            .student-dropdown-panel {
+                position: absolute;
+                top: calc(100% + 8px);
+                bottom: auto;
+                left: 0;
+                right: 0;
+                transform: translateX(0) translateY(-8px);
+                width: 100%;
+                max-height: 0;
+                border-radius: 16px;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(157, 0, 255, 0.15);
+            }
+
+            .student-dropdown-panel.open {
+                max-height: 55vh;
+                opacity: 1;
+                transform: translateX(0) translateY(0);
+                overflow: hidden;
+            }
+
+            /* Arrow at top pointing up to trigger on mobile */
+            .student-dropdown-panel::before {
+                top: -6px;
+                bottom: auto;
+                left: 50%;
+                transform: translateX(-50%) rotate(45deg);
+                width: 12px;
+                height: 12px;
+                border: none;
+                border-left: 1px solid rgba(157, 0, 255, 0.25);
+                border-top: 1px solid rgba(157, 0, 255, 0.25);
+                border-radius: 0;
+                background: rgba(10, 5, 30, 0.97);
+            }
+
+            .student-search-box {
+                padding: 16px 12px 10px;
+            }
+
+            .student-search-box input {
+                padding: 12px 12px 12px 40px;
+                font-size: 16px;
+                /* Prevents iOS zoom on focus */
+                border-radius: 12px;
+            }
+
+            .student-search-box .search-icon {
+                left: 24px;
+                font-size: 14px;
+            }
+
+            .student-list {
+                max-height: calc(55vh - 80px);
+                overflow-y: auto;
+                padding: 6px;
+            }
+
+            .student-item {
+                padding: 12px 14px;
+                gap: 12px;
+            }
+
+            .student-item .student-avatar {
+                width: 34px;
+                height: 34px;
+                font-size: 14px;
+            }
+
+            .student-item .student-name {
+                font-size: 14px;
+            }
+
+            .student-item .student-tag {
+                font-size: 10px;
+            }
+
+            .student-active-chip .chip-close {
+                width: 22px;
+                height: 22px;
+                font-size: 11px;
+            }
+
+            .student-chips-container {
+                gap: 6px;
+                padding: 0 8px;
+            }
+        }
+
+        /* Tablet adjustments */
+        @media (min-width: 640px) and (max-width: 1023px) {
+            .student-dropdown-panel {
+                width: 280px;
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col relative selection:bg-party-pink selection:text-white">
+
+    <!-- Noise Texture -->
+    <div class="noise-overlay"></div>
+
+    <!-- Loader -->
+    <div id="loader" class="loader-container">
+        <div class="flex flex-col items-center gap-4">
+            <div class="equalizer">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+            <p class="font-mono text-party-cyan text-xs tracking-[0.3em] uppercase animate-pulse">Loading Vibes...</p>
+        </div>
+    </div>
+
+    <!-- Ambient Lighting -->
+    <div class="orb bg-party-purple w-[600px] h-[600px] top-[-200px] left-[-100px] animate-pulse-slow"></div>
+    <div class="orb bg-party-cyan w-[500px] h-[500px] bottom-[-100px] right-[-100px] animate-pulse-slow"
+        style="animation-delay: 2s;"></div>
+    <div class="orb bg-party-pink w-[300px] h-[300px] top-[40%] left-[30%] opacity-20 animate-float"
+        style="animation-duration: 15s;"></div>
+
+    <!-- Navigation -->
+    <nav
+        class="fixed top-0 w-full z-40 bg-party-bg/60 backdrop-blur-md border-b border-white/5 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center space-x-3 group cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <div class="relative w-10 h-10 flex items-center justify-center">
+                        <div class="absolute inset-0 bg-party-pink rounded-full opacity-20 group-hover:animate-ping">
+                        </div>
+                        <i
+                            class="fa-solid fa-graduation-cap text-party-cyan text-xl drop-shadow-[0_0_8px_rgba(0,240,255,0.8)]"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <span
+                            class="font-display text-2xl tracking-widest text-white leading-none group-hover:text-party-pink transition-colors">SOSE
+                            <span class="text-party-cyan">'26</span></span>
+                        <span class="text-[9px] font-mono text-gray-400 tracking-[0.2em] uppercase">12th Class
+                            Farewell</span>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="#gallery"
+                        class="hidden sm:inline-flex items-center justify-center px-6 py-2 overflow-hidden font-bold text-white transition-all duration-300 bg-white/5 border border-white/10 rounded-full hover:bg-white/10 group focus:outline-none focus:ring-2 focus:ring-party-cyan focus:ring-offset-2 focus:ring-offset-gray-900">
+                        <span
+                            class="absolute w-full h-full -mt-10 transition-all duration-1000 transform translate-x-12 bg-white opacity-10 rotate-12 group-hover:-translate-x-40 ease"></span>
+                        <span class="relative text-xs tracking-widest flex items-center gap-2">
+                            OPEN GALLERY <i class="fa-solid fa-arrow-down text-party-pink animate-bounce"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative pt-36 pb-20 sm:pt-48 sm:pb-32 px-4 text-center z-20">
+        <div class="max-w-6xl mx-auto relative">
+
+            <!-- Floating Elements -->
+            <i
+                class="fa-solid fa-star text-party-gold text-2xl absolute top-0 left-[10%] animate-spin-slow opacity-60"></i>
+            <i class="fa-solid fa-star-of-life text-party-cyan text-xl absolute bottom-10 right-[15%] animate-spin-slow opacity-60"
+                style="animation-direction: reverse;"></i>
+
+            <!-- Neon Text Effect -->
+            <div class="relative inline-block mb-4">
+                <p
+                    class="font-script text-4xl sm:text-6xl text-party-gold opacity-90 rotate-[-3deg] drop-shadow-[0_0_10px_rgba(255,215,0,0.5)] animate-slide-up">
+                    The Final Chapter
+                </p>
+            </div>
+
+            <h1
+                class="font-display text-7xl sm:text-8xl md:text-9xl mb-8 leading-[0.9] tracking-tighter drop-shadow-[0_0_25px_rgba(189,0,255,0.4)]">
+                <span class="block text-white animate-slide-up" style="animation-delay: 0.1s;">SOSE</span>
+                <span
+                    class="block text-transparent bg-clip-text bg-gradient-to-r from-party-cyan via-white to-party-pink animate-slide-up bg-[length:200%_auto] hover:bg-right transition-all duration-500"
+                    style="animation-delay: 0.3s;">BATCH '26</span>
+            </h1>
+
+            <p class="max-w-2xl mx-auto text-lg md:text-xl text-gray-300 mb-12 font-light leading-relaxed animate-slide-up px-4"
+                style="animation-delay: 0.5s;">
+                Tonight, we trade our uniforms for memories.
+                <span class="text-party-cyan font-semibold drop-shadow-[0_0_8px_rgba(0,240,255,0.5)]">Dress up, show up,
+                    and never forget.</span>
+            </p>
+
+            <!-- Cyberpunk Filters -->
+            <div class="flex flex-wrap justify-center gap-3 sm:gap-4 animate-slide-up items-center relative"
+                style="animation-delay: 0.7s; z-index: 45;">
+                <button onclick="filterGallery('all')"
+                    class="filter-btn active px-8 py-3 rounded-full bg-white text-black font-bold hover:scale-105 transition-transform shadow-[0_0_25px_rgba(255,255,255,0.4)] border-2 border-transparent"
+                    data-filter="all">
+                    ALL VIBES
+                </button>
+                <button onclick="filterGallery('image')"
+                    class="filter-btn px-8 py-3 rounded-full bg-black/40 border border-party-cyan/30 text-party-cyan hover:bg-party-cyan hover:text-black hover:shadow-neon-cyan transition-all duration-300 font-bold backdrop-blur-md"
+                    data-filter="image">
+                    PHOTOS
+                </button>
+                <button onclick="filterGallery('video')"
+                    class="filter-btn px-8 py-3 rounded-full bg-black/40 border border-party-pink/30 text-party-pink hover:bg-party-pink hover:text-black hover:shadow-neon-pink transition-all duration-300 font-bold backdrop-blur-md"
+                    data-filter="video">
+                    VIDEOS
+                </button>
+
+                <!-- Student Filter Dropdown -->
+                <div class="student-dropdown-wrapper" id="student-dropdown-wrapper">
+                    <button class="student-dropdown-trigger" id="student-dropdown-trigger"
+                        onclick="toggleStudentDropdown()">
+                        <i class="fa-solid fa-user-graduate"></i>
+                        <span id="student-trigger-label">STUDENTS</span>
+                        <span class="select-count" id="student-select-count" style="display: none;"></span>
+                        <i class="fa-solid fa-chevron-up chevron-icon"></i>
+                    </button>
+
+                    <div class="student-dropdown-panel" id="student-dropdown-panel">
+                        <!-- Search Box -->
+                        <div class="student-search-box">
+                            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                            <input type="text" id="student-search-input" placeholder="Search students..."
+                                oninput="filterStudentList(this.value)" autocomplete="off">
+                        </div>
+
+                        <!-- Student List -->
+                        <div class="student-list" id="student-list">
+                            <!-- Items populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Student Chips (multi-select) -->
+            <div class="student-chips-container" id="student-chips-container">
+                <!-- Chips dynamically rendered by JS -->
+            </div>
+
+            <!-- Media Count Badge -->
+            <div class="flex justify-center">
+                <div class="media-count-badge" id="media-count-badge" style="display: none;">
+                    <i class="fa-solid fa-images text-party-pink" style="font-size: 10px;"></i>
+                    <span>Showing <span class="count" id="media-count">0</span> items</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Gallery Section -->
+    <main id="gallery" class="flex-grow relative z-10 px-4 sm:px-6 lg:px-8 pb-32 max-w-[1600px] mx-auto w-full">
+        <!-- Grid Container -->
+        <div id="gallery-grid" class="masonry-grid opacity-0 transition-opacity duration-700">
+            <!-- Items will be injected here by JS -->
+        </div>
+    </main>
+
+    <!-- Floating Music Widget (Visual Only) -->
+    <div
+        class="fixed bottom-6 right-6 z-40 flex items-center gap-3 bg-black/60 backdrop-blur-xl border border-white/10 px-4 py-2 rounded-full shadow-lg animate-fade-in-up">
+        <div class="flex gap-1 h-4 items-end">
+            <div class="w-1 bg-party-cyan animate-[equalize_1s_infinite]"></div>
+            <div class="w-1 bg-party-pink animate-[equalize_1.2s_infinite]"></div>
+            <div class="w-1 bg-party-purple animate-[equalize_0.8s_infinite]"></div>
+        </div>
+        <span class="text-xs font-mono text-gray-300 uppercase tracking-widest">Party Mode On</span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/5 bg-black/40 backdrop-blur-lg py-12 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="flex justify-center space-x-6 mb-8">
+                <a href="#"
+                    class="group w-12 h-12 rounded-full bg-white/5 border border-white/5 flex items-center justify-center hover:bg-party-pink hover:border-party-pink transition-all duration-300 hover:-translate-y-2">
+                    <i class="fa-brands fa-instagram text-xl text-gray-400 group-hover:text-white"></i>
+                </a>
+                <a href="#"
+                    class="group w-12 h-12 rounded-full bg-white/5 border border-white/5 flex items-center justify-center hover:bg-party-cyan hover:border-party-cyan transition-all duration-300 hover:-translate-y-2">
+                    <i class="fa-brands fa-tiktok text-xl text-gray-400 group-hover:text-black"></i>
+                </a>
+            </div>
+            <div class="inline-block px-4 py-1 border border-white/10 rounded-full bg-white/5 mb-4">
+                <p class="font-mono text-xs text-party-gold tracking-[0.2em] uppercase">Est. 2026</p>
+            </div>
+            <p class="font-display text-gray-500 tracking-widest text-sm">MADE FOR SOSE CLASS 12</p>
+        </div>
+    </footer>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox" class="fixed inset-0 z-50 hidden opacity-0 transition-opacity duration-300" aria-modal="true"
+        role="dialog">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/95 backdrop-blur-xl" onclick="closeLightbox()"></div>
+
+        <!-- Controls -->
+        <button
+            class="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/10 hover:bg-party-pink hover:shadow-neon-pink text-white z-50 transition-all flex items-center justify-center group"
+            onclick="closeLightbox()">
+            <i class="fa-solid fa-xmark text-xl group-hover:rotate-90 transition-transform"></i>
+        </button>
+
+        <button
+            class="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-white/5 hover:bg-white/20 border border-white/10 text-white z-50 transition-all hover:scale-110 hidden sm:flex items-center justify-center backdrop-blur-md hover:border-party-cyan/50"
+            onclick="navigate(-1)">
+            <i class="fa-solid fa-chevron-left text-xl"></i>
+        </button>
+
+        <button
+            class="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-white/5 hover:bg-white/20 border border-white/10 text-white z-50 transition-all hover:scale-110 hidden sm:flex items-center justify-center backdrop-blur-md hover:border-party-cyan/50"
+            onclick="navigate(1)">
+            <i class="fa-solid fa-chevron-right text-xl"></i>
+        </button>
+
+        <!-- Content Container -->
+        <div class="absolute inset-0 flex items-center justify-center p-4 sm:p-12 pointer-events-none">
+            <div id="lightbox-content"
+                class="pointer-events-auto relative max-w-full max-h-full flex flex-col items-center">
+                <!-- Media -->
+                <div id="media-container"
+                    class="relative rounded-xl overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.9)] border border-white/10 bg-black ring-1 ring-white/10">
+                    <!-- Image or Video tag goes here -->
+                </div>
+
+                <!-- Caption -->
+                <div id="lightbox-caption"
+                    class="mt-6 text-center max-w-2xl bg-black/40 backdrop-blur-md px-6 py-4 rounded-xl border border-white/5">
+                    <h3 class="font-display text-2xl text-white tracking-wide"></h3>
+                    <div class="flex items-center justify-center gap-2 mt-2">
+                        <div class="h-px w-8 bg-party-cyan"></div>
+                        <p class="font-mono text-party-pink text-xs uppercase tracking-widest"></p>
+                        <div class="h-px w-8 bg-party-cyan"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // --- DATA (loaded from JSON files) ---
+        let galleryData = [];
+        let studentsData = [];
+
+        // --- APP STATE ---
+        let filteredData = [];
+        let currentIndex = 0;
+        let currentTypeFilter = 'all';
+        let selectedStudentTags = new Set(); // Multi-select student filter tags
+
+        // --- DOM ELEMENTS ---
+        const grid = document.getElementById('gallery-grid');
+        const loader = document.getElementById('loader');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxContent = document.getElementById('media-container');
+        const lightboxTitle = document.querySelector('#lightbox-caption h3');
+        const lightboxDesc = document.querySelector('#lightbox-caption p');
+
+        // --- LOAD DATA FROM JSON ---
+        async function loadData() {
+            try {
+                const [mediaRes, studentRes] = await Promise.all([
+                    fetch('media.json'),
+                    fetch('student.json')
+                ]);
+
+                const mediaJson = await mediaRes.json();
+                const studentJson = await studentRes.json();
+
+                // Map media.json to gallery format
+                galleryData = mediaJson.map((item, i) => ({
+                    id: i + 1,
+                    type: item.type || 'image',
+                    src: item.uri,
+                    thumbnail: item.thumbnail || null,
+                    title: item.title,
+                    description: item.description || '',
+                    date: item.date || '',
+                    tags: item.tags || [],
+                }));
+
+                studentsData = studentJson;
+                populateStudentList(studentsData);
+
+            } catch (err) {
+                console.error('Error loading data:', err);
+                // Fallback: show empty state
+                galleryData = [];
+                studentsData = [];
+            }
+        }
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            triggerConfetti();
+            await loadData();
+
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                    grid.classList.remove('opacity-0');
+                    applyFilters();
+                }, 500);
+            }, 1200);
+        });
+
+        // --- EFFECTS ---
+        function triggerConfetti() {
+            const colors = ['#FF00FF', '#00F0FF', '#FFD700', '#ffffff'];
+            for (let i = 0; i < 60; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                confetti.style.opacity = Math.random();
+                document.body.appendChild(confetti);
+
+                setTimeout(() => confetti.remove(), 5000);
+            }
+        }
+
+        // TILT EFFECT FUNCTION
+        function addTiltEffect(element) {
+            element.addEventListener('mousemove', (e) => {
+                const rect = element.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const rotateX = ((y - centerY) / centerY) * -5;
+                const rotateY = ((x - centerX) / centerX) * 5;
+
+                element.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+            });
+
+            element.addEventListener('mouseleave', () => {
+                element.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+            });
+        }
+
+        // =============================================
+        //  STUDENT DROPDOWN LOGIC (MULTI-SELECT)
+        // =============================================
+        function populateStudentList(students) {
+            const list = document.getElementById('student-list');
+            list.innerHTML = '';
+
+            if (students.length === 0) {
+                list.innerHTML = '<div class="student-no-results">No students found</div>';
+                return;
+            }
+
+            students.forEach(student => {
+                const item = document.createElement('div');
+                const isSelected = selectedStudentTags.has(student.tag);
+                item.className = 'student-item' + (isSelected ? ' selected' : '');
+                item.dataset.tag = student.tag;
+                item.dataset.name = student.name;
+
+                const initials = student.name.charAt(0).toUpperCase();
+
+                item.innerHTML = `
+                    <div class="student-avatar">${initials}</div>
+                    <span class="student-name">${student.name}</span>
+                    <span class="student-tag">${student.tag}</span>
+                    <div class="check-indicator"><i class="fa-solid fa-check"></i></div>
+                `;
+
+                item.addEventListener('click', () => toggleStudent(student));
+                list.appendChild(item);
+            });
+        }
+
+        function toggleStudentDropdown() {
+            const trigger = document.getElementById('student-dropdown-trigger');
+            const panel = document.getElementById('student-dropdown-panel');
+            const input = document.getElementById('student-search-input');
+
+            const isOpen = panel.classList.contains('open');
+
+            if (isOpen) {
+                closeStudentDropdown();
+            } else {
+                panel.classList.add('open');
+                trigger.classList.add('open');
+                input.value = '';
+                filterStudentList('');
+                setTimeout(() => input.focus(), 150);
+            }
+        }
+
+        function closeStudentDropdown() {
+            const trigger = document.getElementById('student-dropdown-trigger');
+            const panel = document.getElementById('student-dropdown-panel');
+            panel.classList.remove('open');
+            trigger.classList.remove('open');
+        }
+
+        function filterStudentList(query) {
+            const list = document.getElementById('student-list');
+            const normalizedQuery = query.toLowerCase().trim();
+
+            const matched = studentsData.filter(s =>
+                s.name.toLowerCase().includes(normalizedQuery) ||
+                s.tag.toLowerCase().includes(normalizedQuery)
+            );
+
+            list.innerHTML = '';
+
+            if (matched.length === 0) {
+                list.innerHTML = '<div class="student-no-results"><i class="fa-solid fa-ghost" style="font-size: 18px; margin-bottom: 6px; display: block; opacity: 0.3;"></i>No match found</div>';
+                return;
+            }
+
+            matched.forEach(student => {
+                const item = document.createElement('div');
+                const isSelected = selectedStudentTags.has(student.tag);
+                item.className = 'student-item' + (isSelected ? ' selected' : '');
+                item.dataset.tag = student.tag;
+                item.dataset.name = student.name;
+
+                const initials = student.name.charAt(0).toUpperCase();
+
+                item.innerHTML = `
+                    <div class="student-avatar">${initials}</div>
+                    <span class="student-name">${highlightMatch(student.name, normalizedQuery)}</span>
+                    <span class="student-tag">${student.tag}</span>
+                    <div class="check-indicator"><i class="fa-solid fa-check"></i></div>
+                `;
+
+                item.addEventListener('click', () => toggleStudent(student));
+                list.appendChild(item);
+            });
+        }
+
+        function highlightMatch(text, query) {
+            if (!query) return text;
+            const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+            return text.replace(regex, '<span style="color: #00F0FF; font-weight: 800;">$1</span>');
+        }
+
+        // Toggle a student in/out of multi-select
+        function toggleStudent(student) {
+            if (selectedStudentTags.has(student.tag)) {
+                selectedStudentTags.delete(student.tag);
+            } else {
+                selectedStudentTags.add(student.tag);
+            }
+
+            // Re-render the list to update checkbox states
+            const searchInput = document.getElementById('student-search-input');
+            filterStudentList(searchInput ? searchInput.value : '');
+
+            // Update UI
+            updateTriggerState();
+            renderStudentChips();
+            applyFilters();
+        }
+
+        // Remove a single student tag (from chip close button)
+        function removeStudentTag(tag) {
+            selectedStudentTags.delete(tag);
+            updateTriggerState();
+            renderStudentChips();
+            applyFilters();
+
+            // If dropdown is open, re-render list
+            const panel = document.getElementById('student-dropdown-panel');
+            if (panel && panel.classList.contains('open')) {
+                const searchInput = document.getElementById('student-search-input');
+                filterStudentList(searchInput ? searchInput.value : '');
+            }
+        }
+
+        // Clear all student filters
+        function clearAllStudentTags() {
+            selectedStudentTags.clear();
+            updateTriggerState();
+            renderStudentChips();
+            applyFilters();
+
+            // If dropdown is open, re-render list
+            const panel = document.getElementById('student-dropdown-panel');
+            if (panel && panel.classList.contains('open')) {
+                const searchInput = document.getElementById('student-search-input');
+                filterStudentList(searchInput ? searchInput.value : '');
+            }
+        }
+
+        // Update trigger button badge and active state
+        function updateTriggerState() {
+            const trigger = document.getElementById('student-dropdown-trigger');
+            const countBadge = document.getElementById('student-select-count');
+            const count = selectedStudentTags.size;
+
+            if (count > 0) {
+                trigger.classList.add('active');
+                countBadge.textContent = count;
+                countBadge.style.display = 'inline-flex';
+            } else {
+                trigger.classList.remove('active');
+                countBadge.style.display = 'none';
+            }
+        }
+
+        // Render chips for all selected students
+        function renderStudentChips() {
+            const container = document.getElementById('student-chips-container');
+            container.innerHTML = '';
+
+            if (selectedStudentTags.size === 0) return;
+
+            selectedStudentTags.forEach(tag => {
+                const student = studentsData.find(s => s.tag === tag);
+                if (!student) return;
+
+                const chip = document.createElement('div');
+                chip.className = 'student-active-chip';
+                chip.innerHTML = `
+                    <div class="chip-avatar">${student.name.charAt(0).toUpperCase()}</div>
+                    <span class="chip-name">${student.name}</span>
+                    <div class="chip-close" onclick="removeStudentTag('${tag}')" title="Remove ${student.name}">
+                        <i class="fa-solid fa-xmark"></i>
+                    </div>
+                `;
+                container.appendChild(chip);
+            });
+
+            // Add "Clear All" button if 2+ selected
+            if (selectedStudentTags.size >= 2) {
+                const clearBtn = document.createElement('div');
+                clearBtn.className = 'student-clear-all';
+                clearBtn.onclick = clearAllStudentTags;
+                clearBtn.innerHTML = '<i class="fa-solid fa-xmark"></i> Clear All';
+                container.appendChild(clearBtn);
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const wrapper = document.getElementById('student-dropdown-wrapper');
+            const panel = document.getElementById('student-dropdown-panel');
+            if (wrapper && panel && panel.classList.contains('open') && !wrapper.contains(e.target)) {
+                closeStudentDropdown();
+            }
+        });
+
+        // Close dropdown on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const panel = document.getElementById('student-dropdown-panel');
+                if (panel && panel.classList.contains('open')) {
+                    closeStudentDropdown();
+                }
+            }
+        });
+
+        // =============================================
+        //  COMBINED FILTER LOGIC
+        // =============================================
+        function applyFilters() {
+            let data = [...galleryData];
+
+            // Type filter (all, image, video)
+            if (currentTypeFilter !== 'all') {
+                data = data.filter(item => item.type === currentTypeFilter);
+            }
+
+            // Student multi-select filter (OR logic: show media matching ANY selected tag)
+            if (selectedStudentTags.size > 0) {
+                data = data.filter(item =>
+                    item.tags && item.tags.some(tag => selectedStudentTags.has(tag))
+                );
+            }
+
+            filteredData = data;
+
+            // Update media count badge
+            const badge = document.getElementById('media-count-badge');
+            const countEl = document.getElementById('media-count');
+            if (selectedStudentTags.size > 0 || currentTypeFilter !== 'all') {
+                badge.style.display = 'inline-flex';
+                countEl.textContent = filteredData.length;
+            } else {
+                badge.style.display = 'none';
+            }
+
+            renderGallery();
+        }
+
+        // --- RENDER FUNCTION ---
+        function renderGallery() {
+            grid.innerHTML = '';
+
+            if (filteredData.length === 0) {
+                grid.innerHTML = `
+                    <div style="column-span: all; text-align: center; padding: 60px 20px;">
+                        <i class="fa-solid fa-face-sad-tear" style="font-size: 48px; color: rgba(157, 0, 255, 0.3); margin-bottom: 16px;"></i>
+                        <p style="font-family: 'Space Grotesk', monospace; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.15em; font-size: 13px;">No media found for this filter</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filteredData.forEach((item, index) => {
+                const element = document.createElement('div');
+                element.className = 'masonry-item group relative cursor-pointer transition-transform duration-200 ease-out';
+                element.onclick = () => openLightbox(index);
+
+                // Add 3D Tilt Listener
+                addTiltEffect(element);
+
+                // --- GLASS CARD STYLE ---
+                const innerHTML = `
+                    <div class="relative overflow-hidden rounded-xl bg-party-card border border-white/5 backdrop-blur-sm group-hover:border-party-cyan/30 group-hover:shadow-neon-cyan transition-all duration-300">
+                        <!-- Image/Thumbnail Container -->
+                        <div class="relative aspect-auto">
+                            ${item.type === 'video' ? `
+                                <img src="${item.thumbnail}" alt="${item.title}" class="w-full h-auto object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-700">
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="w-14 h-14 rounded-full bg-black/40 backdrop-blur-xl border border-white/30 flex items-center justify-center group-hover:scale-110 transition-transform shadow-[0_0_30px_rgba(255,0,255,0.4)]">
+                                        <i class="fa-solid fa-play text-white ml-1 text-xl"></i>
+                                    </div>
+                                </div>
+                            ` : `
+                                <img src="${item.src}" alt="${item.title}" class="w-full h-auto object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-700">
+                            `}
+                            
+                            <!-- Overlay Gradient -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity"></div>
+                        </div>
+                        
+                        <!-- Content -->
+                        <div class="absolute bottom-0 left-0 w-full p-6 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            <span class="inline-block px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider bg-party-pink/20 text-party-pink border border-party-pink/30 mb-2 backdrop-blur-md shadow-lg">${item.date}</span>
+                            <h3 class="font-display text-2xl text-white leading-none drop-shadow-md group-hover:text-party-cyan transition-colors">${item.title}</h3>
+                            ${item.tags && item.tags.length > 0 ? `
+                                <div class="flex flex-wrap gap-1 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    ${item.tags.slice(0, 3).map(tag => `<span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-gray-400">${tag}</span>`).join('')}
+                                    ${item.tags.length > 3 ? `<span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-gray-400">+${item.tags.length - 3}</span>` : ''}
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+
+                element.innerHTML = innerHTML;
+                grid.appendChild(element);
+            });
+
+            // Update Active Buttons
+            updateFilterButtons();
+        }
+
+        function updateFilterButtons() {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if (btn.dataset.filter === currentTypeFilter) {
+                    btn.classList.remove('bg-black/40', 'border-party-cyan/30', 'text-party-cyan', 'border-party-pink/30', 'text-party-pink');
+                    btn.classList.add('bg-white', 'text-black', 'shadow-neon-cyan', 'scale-105');
+                } else {
+                    btn.classList.add('bg-black/40');
+                    btn.classList.remove('bg-white', 'text-black', 'shadow-neon-cyan', 'scale-105');
+
+                    // Re-add specific colors based on original class
+                    if (btn.dataset.filter === 'image') {
+                        btn.classList.add('border-party-cyan/30', 'text-party-cyan');
+                    } else if (btn.dataset.filter === 'video') {
+                        btn.classList.add('border-party-pink/30', 'text-party-pink');
+                    }
+                }
+            });
+        }
+
+        function filterGallery(type) {
+            currentTypeFilter = type;
+
+            const gridEl = document.getElementById('gallery-grid');
+            gridEl.style.opacity = '0';
+            gridEl.style.transform = 'translateY(20px)';
+
+            setTimeout(() => {
+                applyFilters();
+                gridEl.style.opacity = '1';
+                gridEl.style.transform = 'translateY(0)';
+            }, 300);
+        }
+
+        // --- LIGHTBOX FUNCTIONS ---
+        function openLightbox(index) {
+            currentIndex = index;
+            updateLightboxContent();
+            lightbox.classList.remove('hidden');
+            setTimeout(() => { lightbox.classList.remove('opacity-0'); }, 10);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            lightbox.classList.add('opacity-0');
+            setTimeout(() => {
+                lightbox.classList.add('hidden');
+                lightboxContent.innerHTML = '';
+            }, 300);
+            document.body.style.overflow = '';
+        }
+
+        function updateLightboxContent() {
+            const item = filteredData[currentIndex];
+            lightboxContent.innerHTML = ''; // Clear
+
+            if (item.type === 'video') {
+                lightboxContent.innerHTML = `
+                    <video controls autoplay class="max-w-full max-h-[80vh] shadow-2xl outline-none bg-black rounded-lg">
+                        <source src="${item.src}" type="video/mp4">
+                    </video>
+                `;
+            } else {
+                lightboxContent.innerHTML = `
+                    <img src="${item.src}" alt="${item.title}" class="max-w-full max-h-[80vh] object-contain shadow-2xl rounded-lg">
+                `;
+            }
+
+            lightboxTitle.textContent = item.title;
+            lightboxDesc.textContent = item.description + ' • ' + item.date;
+        }
+
+        function navigate(direction) {
+            currentIndex += direction;
+            if (currentIndex < 0) currentIndex = filteredData.length - 1;
+            if (currentIndex >= filteredData.length) currentIndex = 0;
+
+            // Fade effect inside modal
+            const container = document.getElementById('media-container');
+            container.style.transform = 'scale(0.95)';
+            container.style.opacity = '0.5';
+
+            setTimeout(() => {
+                updateLightboxContent();
+                container.style.transform = 'scale(1)';
+                container.style.opacity = '1';
+            }, 200);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (lightbox.classList.contains('hidden')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft') navigate(-1);
+            if (e.key === 'ArrowRight') navigate(1);
+        });
+    </script>
+</body>
+
+</html>
