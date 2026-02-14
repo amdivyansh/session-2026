@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SOSE '26 | The Final Party</title>
 
+    <!-- DNS Prefetch for media CDN -->
+    <link rel="dns-prefetch" href="https://media.githubusercontent.com">
+    <link rel="preconnect" href="https://media.githubusercontent.com" crossorigin>
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -227,6 +231,8 @@
             margin-bottom: 1.25rem;
             transform-style: preserve-3d;
             perspective: 1000px;
+            contain: content;
+            /* Isolate reflows — big perf win with many cards */
         }
 
         /* Cap media height for denser layout */
@@ -270,6 +276,130 @@
             .masonry-item .media-container img,
             .masonry-item .media-container video {
                 max-height: 340px;
+            }
+        }
+
+        /* Media Loading Skeleton */
+        .media-skeleton {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(110deg, #0a0520 30%, #150a35 50%, #0a0520 70%);
+            background-size: 300% 100%;
+            animation: skeletonPulse 1.5s ease-in-out infinite;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .media-skeleton::after {
+            content: '';
+            width: 32px;
+            height: 32px;
+            border: 3px solid rgba(157, 0, 255, 0.2);
+            border-top-color: rgba(0, 240, 255, 0.6);
+            border-radius: 50%;
+            animation: skeletonSpin 0.8s linear infinite;
+        }
+
+        @keyframes skeletonPulse {
+            0% {
+                background-position: 100% 0;
+            }
+
+            100% {
+                background-position: -100% 0;
+            }
+        }
+
+        @keyframes skeletonSpin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Animation Toggle Button */
+        .anim-toggle-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .anim-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(0, 240, 255, 0.3);
+            color: #00F0FF;
+        }
+
+        .anim-toggle-btn.off {
+            border-color: rgba(255, 0, 255, 0.3);
+            color: #FF00FF;
+        }
+
+        .anim-toggle-btn .tooltip {
+            position: absolute;
+            bottom: -32px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            font-size: 10px;
+            font-family: 'Space Grotesk', monospace;
+            color: rgba(255, 255, 255, 0.5);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 3px 8px;
+            border-radius: 4px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .anim-toggle-btn:hover .tooltip {
+            opacity: 1;
+        }
+
+        /* Animations OFF mode */
+        body.animations-off *,
+        body.animations-off *::before,
+        body.animations-off *::after {
+            animation-duration: 0s !important;
+            animation-delay: 0s !important;
+            transition-duration: 0s !important;
+        }
+
+        body.animations-off .orb,
+        body.animations-off .party-stars-container,
+        body.animations-off .noise-overlay {
+            display: none !important;
+        }
+
+        body.animations-off .media-skeleton {
+            animation: none !important;
+            background: #0a0520 !important;
+        }
+
+        body.animations-off .media-skeleton::after {
+            animation: none !important;
+            border-color: rgba(157, 0, 255, 0.3) !important;
+        }
+
+        /* Disable expensive backdrop-blur on mobile when animations off */
+        @media (max-width: 768px) {
+
+            body.animations-off .backdrop-blur-sm,
+            body.animations-off .backdrop-blur-md,
+            body.animations-off .backdrop-blur-xl,
+            body.animations-off [class*="backdrop-blur"] {
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
             }
         }
 
@@ -907,6 +1037,12 @@
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
+                    <!-- Animation Toggle -->
+                    <button id="anim-toggle" class="anim-toggle-btn relative" onclick="toggleAnimations()"
+                        title="Toggle Animations">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span class="tooltip">Toggle Effects</span>
+                    </button>
                     <a href="#gallery"
                         class="hidden sm:inline-flex items-center justify-center px-6 py-2 overflow-hidden font-bold text-white transition-all duration-300 bg-white/5 border border-white/10 rounded-full hover:bg-white/10 group focus:outline-none focus:ring-2 focus:ring-party-cyan focus:ring-offset-2 focus:ring-offset-gray-900">
                         <span
@@ -1163,9 +1299,45 @@
             }
         }
 
+        // --- ANIMATION TOGGLE ---
+        let animationsEnabled = localStorage.getItem('animationsOff') !== 'true';
+
+        function toggleAnimations() {
+            animationsEnabled = !animationsEnabled;
+            document.body.classList.toggle('animations-off', !animationsEnabled);
+            localStorage.setItem('animationsOff', !animationsEnabled);
+
+            const btn = document.getElementById('anim-toggle');
+            if (btn) {
+                btn.classList.toggle('off', !animationsEnabled);
+                btn.querySelector('i').className = animationsEnabled
+                    ? 'fa-solid fa-wand-magic-sparkles'
+                    : 'fa-solid fa-power-off';
+                btn.querySelector('.tooltip').textContent = animationsEnabled
+                    ? 'Disable Effects'
+                    : 'Enable Effects';
+            }
+        }
+
+        function initAnimationToggle() {
+            if (!animationsEnabled) {
+                document.body.classList.add('animations-off');
+                const btn = document.getElementById('anim-toggle');
+                if (btn) {
+                    btn.classList.add('off');
+                    btn.querySelector('i').className = 'fa-solid fa-power-off';
+                    btn.querySelector('.tooltip').textContent = 'Enable Effects';
+                }
+            }
+        }
+
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', async () => {
-            triggerConfetti();
+            initAnimationToggle();
+
+            if (animationsEnabled) {
+                triggerConfetti();
+            }
             spawnPartyStars();
             await loadData();
 
@@ -1230,8 +1402,12 @@
             }
         }
 
-        // TILT EFFECT FUNCTION
+        // TILT EFFECT FUNCTION (disabled on touch devices — saves CPU)
+        const isTouchDevice = window.matchMedia('(hover: none)').matches;
+
         function addTiltEffect(element) {
+            if (isTouchDevice) return; // Skip on phones/tablets
+
             element.addEventListener('mousemove', (e) => {
                 const rect = element.getBoundingClientRect();
                 const x = e.clientX - rect.left;
@@ -1528,19 +1704,21 @@
                     <div class="relative overflow-hidden rounded-xl bg-party-card border border-white/5 backdrop-blur-sm group-hover:border-party-cyan/30 group-hover:shadow-neon-cyan transition-all duration-300">
                         <!-- Image/Thumbnail Container -->
                         <div class="media-container relative">
+                            <!-- Loading Skeleton -->
+                            <div class="media-skeleton"></div>
                             ${item.type === 'video' ? `
                                 ${(item.thumbnail && !item.thumbnail.match(/\.(mp4|mov|webm|ogg)$/i)) ? `
-                                    <img src="${item.thumbnail}" alt="${item.title}" class="opacity-90 group-hover:opacity-100 transition-opacity duration-700">
+                                    <img data-src="${item.thumbnail}" alt="${item.title}" loading="lazy" onload="this.parentElement.querySelector('.media-skeleton')?.remove()" onerror="this.parentElement.querySelector('.media-skeleton')?.remove()" class="lazy-media opacity-90 group-hover:opacity-100 transition-opacity duration-700">
                                 ` : `
-                                    <video src="${item.src}" preload="metadata" muted class="opacity-90 group-hover:opacity-100 transition-opacity duration-700"></video>
+                                    <video data-src="${item.src}" preload="none" muted playsinline onloadeddata="this.parentElement.querySelector('.media-skeleton')?.remove()" onerror="this.parentElement.querySelector('.media-skeleton')?.remove()" class="lazy-media opacity-90 group-hover:opacity-100 transition-opacity duration-700"></video>
                                 `}
-                                <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="absolute inset-0 flex items-center justify-center" style="z-index:3">
                                     <div class="w-14 h-14 rounded-full bg-black/40 backdrop-blur-xl border border-white/30 flex items-center justify-center group-hover:scale-110 transition-transform shadow-[0_0_30px_rgba(255,0,255,0.4)]">
                                         <i class="fa-solid fa-play text-white ml-1 text-xl"></i>
                                     </div>
                                 </div>
                             ` : `
-                                <img src="${item.src}" alt="${item.title}" class="opacity-90 group-hover:opacity-100 transition-opacity duration-700">
+                                <img data-src="${item.src}" alt="${item.title}" loading="lazy" onload="this.parentElement.querySelector('.media-skeleton')?.remove()" onerror="this.parentElement.querySelector('.media-skeleton')?.remove()" class="lazy-media opacity-90 group-hover:opacity-100 transition-opacity duration-700">
                             `}
                             
                             <!-- Overlay Gradient -->
@@ -1565,8 +1743,43 @@
                 grid.appendChild(element);
             });
 
+            // Lazy-load media with IntersectionObserver (only load when near viewport)
+            setupLazyMedia();
+
             // Update Active Buttons
             updateFilterButtons();
+        }
+
+        // --- LAZY MEDIA LOADER ---
+        // Only loads video metadata / image src when the card scrolls near the viewport
+        function setupLazyMedia() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+
+                    const el = entry.target;
+                    const src = el.dataset.src;
+                    if (!src) return;
+
+                    if (el.tagName === 'VIDEO') {
+                        // Load only metadata (first frame) — NOT the full video
+                        el.src = src;
+                        el.preload = 'metadata';
+                    } else {
+                        el.src = src;
+                    }
+
+                    el.removeAttribute('data-src');
+                    observer.unobserve(el);
+                });
+            }, {
+                rootMargin: '200px 0px',  // Start loading 200px before entering viewport
+                threshold: 0
+            });
+
+            document.querySelectorAll('.lazy-media[data-src]').forEach(el => {
+                observer.observe(el);
+            });
         }
 
         function updateFilterButtons() {
@@ -1612,6 +1825,10 @@
         }
 
         function closeLightbox() {
+            // Stop any playing video to free memory
+            const vid = lightboxContent.querySelector('video');
+            if (vid) { vid.pause(); vid.removeAttribute('src'); vid.load(); }
+
             lightbox.classList.add('opacity-0');
             setTimeout(() => {
                 lightbox.classList.add('hidden');
@@ -1622,11 +1839,14 @@
 
         function updateLightboxContent() {
             const item = filteredData[currentIndex];
+            // Stop previous video before switching
+            const prevVid = lightboxContent.querySelector('video');
+            if (prevVid) { prevVid.pause(); prevVid.removeAttribute('src'); prevVid.load(); }
             lightboxContent.innerHTML = ''; // Clear
 
             if (item.type === 'video') {
                 lightboxContent.innerHTML = `
-                    <video controls autoplay class="max-w-full max-h-[80vh] shadow-2xl outline-none bg-black rounded-lg">
+                    <video controls autoplay playsinline class="max-w-full max-h-[80vh] shadow-2xl outline-none bg-black rounded-lg">
                         <source src="${item.src}" type="video/mp4">
                     </video>
                 `;
