@@ -107,6 +107,87 @@
             animation: float 10s infinite;
         }
 
+        /* Animated Party Stars Background */
+        .party-stars-container {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .party-star {
+            position: absolute;
+            border-radius: 50%;
+            animation: starFloat linear infinite, starTwinkle ease-in-out infinite alternate;
+        }
+
+        .party-star.shape-cross {
+            border-radius: 0;
+            background: none !important;
+        }
+
+        .party-star.shape-cross::before,
+        .party-star.shape-cross::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .party-star.shape-cross::before {
+            width: 100%;
+            height: 30%;
+            background: inherit;
+            background: var(--star-color);
+            border-radius: 2px;
+        }
+
+        .party-star.shape-cross::after {
+            width: 30%;
+            height: 100%;
+            background: var(--star-color);
+            border-radius: 2px;
+        }
+
+        .party-star.shape-diamond {
+            border-radius: 2px;
+            transform: rotate(45deg);
+        }
+
+        @keyframes starFloat {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-10vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes starTwinkle {
+            0% {
+                opacity: 0.3;
+                box-shadow: 0 0 4px currentColor;
+            }
+
+            100% {
+                opacity: 1;
+                box-shadow: 0 0 12px currentColor, 0 0 24px currentColor;
+            }
+        }
+
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
@@ -124,26 +205,72 @@
         /* Masonry Layout */
         .masonry-grid {
             column-count: 1;
-            column-gap: 2rem;
+            column-gap: 1rem;
         }
 
         @media (min-width: 640px) {
             .masonry-grid {
                 column-count: 2;
+                column-gap: 1.25rem;
             }
         }
 
         @media (min-width: 1024px) {
             .masonry-grid {
-                column-count: 3;
+                column-count: 4;
+                column-gap: 1.25rem;
             }
         }
 
         .masonry-item {
             break-inside: avoid;
-            margin-bottom: 2rem;
+            margin-bottom: 1.25rem;
             transform-style: preserve-3d;
             perspective: 1000px;
+        }
+
+        /* Cap media height for denser layout */
+        .masonry-item .media-container {
+            max-height: 240px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0a0520;
+            min-height: 120px;
+        }
+
+        .masonry-item .media-container img,
+        .masonry-item .media-container video {
+            width: 100%;
+            height: auto;
+            max-height: 240px;
+            object-fit: cover !important;
+            object-position: center;
+            display: block;
+        }
+
+        @media (min-width: 640px) {
+            .masonry-item .media-container {
+                max-height: 300px;
+            }
+
+            .masonry-item .media-container img,
+            .masonry-item .media-container video {
+                max-height: 300px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .masonry-item .media-container {
+                max-height: 340px;
+            }
+
+            .masonry-item .media-container img,
+            .masonry-item .media-container video {
+                max-height: 340px;
+            }
         }
 
         /* Loader */
@@ -741,6 +868,9 @@
     <!-- Noise Texture -->
     <div class="noise-overlay"></div>
 
+    <!-- Animated Party Stars Background -->
+    <div class="party-stars-container" id="party-stars-container"></div>
+
     <!-- Loader -->
     <div id="loader" class="loader-container">
         <div class="flex flex-col items-center gap-4">
@@ -768,12 +898,6 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
                 <div class="flex items-center space-x-3 group cursor-pointer" onclick="window.scrollTo(0,0)">
-                    <div class="relative w-10 h-10 flex items-center justify-center">
-                        <div class="absolute inset-0 bg-party-pink rounded-full opacity-20 group-hover:animate-ping">
-                        </div>
-                        <i
-                            class="fa-solid fa-graduation-cap text-party-cyan text-xl drop-shadow-[0_0_8px_rgba(0,240,255,0.8)]"></i>
-                    </div>
                     <div class="flex flex-col">
                         <span
                             class="font-display text-2xl tracking-widest text-white leading-none group-hover:text-party-pink transition-colors">SOSE
@@ -924,7 +1048,15 @@
             <div class="inline-block px-4 py-1 border border-white/10 rounded-full bg-white/5 mb-4">
                 <p class="font-mono text-xs text-party-gold tracking-[0.2em] uppercase">Est. 2026</p>
             </div>
-            <p class="font-display text-gray-500 tracking-widest text-sm">MADE FOR SOSE CLASS 12</p>
+            <p class="font-display text-gray-500 tracking-widest text-sm mb-4">MADE FOR SOSE CLASS 12</p>
+            <div class="mt-4 pt-6 border-t border-white/5">
+                <p class="font-mono text-xs text-gray-600 tracking-wider">
+                    Made with <span class="text-party-pink animate-pulse inline-block">❤️</span> by
+                    <a href="https://dkydivyansh.com" target="_blank" rel="noopener noreferrer"
+                        class="text-party-cyan hover:text-white transition-colors duration-300 font-semibold"
+                        style="text-decoration: none;">dkydivyansh</a>
+                </p>
+            </div>
         </div>
     </footer>
 
@@ -1008,13 +1140,13 @@
                 const mediaJson = await mediaRes.json();
                 const studentJson = await studentRes.json();
 
-                // Map media.json to gallery format
+                // Map media.json to gallery format (supports both old `uri` and new `src` field)
                 galleryData = mediaJson.map((item, i) => ({
-                    id: i + 1,
+                    id: item.id || i + 1,
                     type: item.type || 'image',
-                    src: item.uri,
+                    src: item.src || item.uri,
                     thumbnail: item.thumbnail || null,
-                    title: item.title,
+                    title: item.title || 'Untitled',
                     description: item.description || '',
                     date: item.date || '',
                     tags: item.tags || [],
@@ -1034,6 +1166,7 @@
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', async () => {
             triggerConfetti();
+            spawnPartyStars();
             await loadData();
 
             setTimeout(() => {
@@ -1059,6 +1192,41 @@
                 document.body.appendChild(confetti);
 
                 setTimeout(() => confetti.remove(), 5000);
+            }
+        }
+
+        // Animated background party stars
+        function spawnPartyStars() {
+            const container = document.getElementById('party-stars-container');
+            if (!container) return;
+
+            const colors = ['#FF00FF', '#00F0FF', '#FFD700', '#9D00FF', '#ffffff', '#ff66b2', '#66ffcc'];
+            const shapes = ['', 'shape-cross', 'shape-diamond'];
+            const starCount = 35;
+
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const shape = shapes[Math.floor(Math.random() * shapes.length)];
+                const size = Math.random() * 5 + 2; // 2px to 7px
+                const left = Math.random() * 100;
+                const floatDuration = Math.random() * 20 + 15; // 15s to 35s
+                const twinkleDuration = Math.random() * 2 + 1; // 1s to 3s
+                const delay = Math.random() * 25; // stagger start times
+
+                star.className = `party-star ${shape}`;
+                star.style.cssText = `
+                    left: ${left}%;
+                    width: ${size}px;
+                    height: ${size}px;
+                    background: ${shape === 'shape-cross' ? 'none' : color};
+                    color: ${color};
+                    --star-color: ${color};
+                    animation-duration: ${floatDuration}s, ${twinkleDuration}s;
+                    animation-delay: ${delay}s, ${Math.random() * 2}s;
+                `;
+
+                container.appendChild(star);
             }
         }
 
@@ -1359,16 +1527,20 @@
                 const innerHTML = `
                     <div class="relative overflow-hidden rounded-xl bg-party-card border border-white/5 backdrop-blur-sm group-hover:border-party-cyan/30 group-hover:shadow-neon-cyan transition-all duration-300">
                         <!-- Image/Thumbnail Container -->
-                        <div class="relative aspect-auto">
+                        <div class="media-container relative">
                             ${item.type === 'video' ? `
-                                <img src="${item.thumbnail}" alt="${item.title}" class="w-full h-auto object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-700">
+                                ${(item.thumbnail && !item.thumbnail.match(/\.(mp4|mov|webm|ogg)$/i)) ? `
+                                    <img src="${item.thumbnail}" alt="${item.title}" class="opacity-90 group-hover:opacity-100 transition-opacity duration-700">
+                                ` : `
+                                    <video src="${item.src}" preload="metadata" muted class="opacity-90 group-hover:opacity-100 transition-opacity duration-700"></video>
+                                `}
                                 <div class="absolute inset-0 flex items-center justify-center">
                                     <div class="w-14 h-14 rounded-full bg-black/40 backdrop-blur-xl border border-white/30 flex items-center justify-center group-hover:scale-110 transition-transform shadow-[0_0_30px_rgba(255,0,255,0.4)]">
                                         <i class="fa-solid fa-play text-white ml-1 text-xl"></i>
                                     </div>
                                 </div>
                             ` : `
-                                <img src="${item.src}" alt="${item.title}" class="w-full h-auto object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-700">
+                                <img src="${item.src}" alt="${item.title}" class="opacity-90 group-hover:opacity-100 transition-opacity duration-700">
                             `}
                             
                             <!-- Overlay Gradient -->
