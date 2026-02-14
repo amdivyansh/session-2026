@@ -596,75 +596,68 @@
     </nav>
 
     <!-- Hero Section -->
-    <header class="relative pt-36 pb-20 sm:pt-48 sm:pb-32 px-4 text-center z-20">
-        <div class="max-w-6xl mx-auto relative">
+    <header class="relative min-h-screen flex flex-col justify-center items-center px-4 text-center z-20">
+        <div class="max-w-6xl mx-auto relative w-full pt-20">
 
-            <!-- Floating Elements -->
-            <i
-                class="fa-solid fa-star text-party-gold text-2xl absolute top-0 left-[10%] animate-spin-slow opacity-60"></i>
-            <i class="fa-solid fa-star-of-life text-party-cyan text-xl absolute bottom-10 right-[15%] animate-spin-slow opacity-60"
-                style="animation-direction: reverse;"></i>
+            <i class="fa-solid fa-star text-party-gold text-2xl absolute -top-10 left-[10%] animate-spin-slow opacity-60"></i>
+            <i class="fa-solid fa-star-of-life text-party-cyan text-xl absolute -bottom-10 right-[15%] animate-spin-slow opacity-60" style="animation-direction: reverse;"></i>
 
-            <!-- Neon Text Effect -->
             <div class="relative inline-block mb-4">
-                <p
-                    class="font-script text-4xl sm:text-6xl text-party-gold opacity-90 rotate-[-3deg] drop-shadow-[0_0_10px_rgba(255,215,0,0.5)] animate-slide-up">
+                <p class="font-script text-4xl sm:text-6xl text-party-gold opacity-90 rotate-[-3deg] drop-shadow-[0_0_10px_rgba(255,215,0,0.5)] animate-slide-up">
                     The Final Chapter
                 </p>
             </div>
 
-            <h1
-                class="font-display text-7xl sm:text-8xl md:text-9xl mb-8 leading-[0.9] tracking-tighter drop-shadow-[0_0_25px_rgba(189,0,255,0.4)]">
+            <h1 class="font-display text-7xl sm:text-8xl md:text-9xl mb-8 leading-[0.9] tracking-tighter drop-shadow-[0_0_25px_rgba(189,0,255,0.4)]">
                 <span class="block text-white animate-slide-up" style="animation-delay: 0.1s;">SOSE INA</span>
-                <span
-                    class="block text-transparent bg-clip-text bg-gradient-to-r from-party-cyan via-white to-party-pink animate-slide-up bg-[length:200%_auto] hover:bg-right transition-all duration-500"
-                    style="animation-delay: 0.3s;">BATCH '26</span>
+                <span class="block text-transparent bg-clip-text bg-gradient-to-r from-party-cyan via-white to-party-pink animate-slide-up bg-[length:200%_auto] hover:bg-right transition-all duration-500" style="animation-delay: 0.3s;">BATCH '26</span>
             </h1>
 
-            <p class="max-w-2xl mx-auto text-lg md:text-xl text-gray-300 mb-12 font-light leading-relaxed animate-slide-up px-4"
-                style="animation-delay: 0.5s;">
+            <p class="max-w-2xl mx-auto text-lg md:text-xl text-gray-300 mb-12 font-light leading-relaxed animate-slide-up px-4" style="animation-delay: 0.5s;">
                 Tonight, we trade our uniforms for memories.
-                <span class="text-party-cyan font-semibold drop-shadow-[0_0_8px_rgba(0,240,255,0.5)]">Dress up, show up,
-                    and never forget.</span>
+                <span class="text-party-cyan font-semibold drop-shadow-[0_0_8px_rgba(0,240,255,0.5)]">Dress up, show up, and never forget.</span>
             </p>
-
-            <!-- Cyberpunk Filters -->
-            <div class="flex flex-wrap justify-center gap-3 sm:gap-4 animate-slide-up items-center relative"
-                style="animation-delay: 0.7s; z-index: 45;">
-                <button onclick="filterGallery('all')"
-                    class="filter-btn active px-8 py-3 rounded-full bg-white text-black font-bold hover:scale-105 transition-transform shadow-[0_0_25px_rgba(255,255,255,0.4)] border-2 border-transparent"
-                    data-filter="all">
-                    ALL VIBES
-                </button>
-                <button onclick="filterGallery('image')"
-                    class="filter-btn px-8 py-3 rounded-full bg-black/40 border border-party-cyan/30 text-party-cyan hover:bg-party-cyan hover:text-black hover:shadow-neon-cyan transition-all duration-300 font-bold backdrop-blur-md"
-                    data-filter="image">
-                    PHOTOS
-                </button>
-                <button onclick="filterGallery('video')"
-                    class="filter-btn px-8 py-3 rounded-full bg-black/40 border border-party-pink/30 text-party-pink hover:bg-party-pink hover:text-black hover:shadow-neon-pink transition-all duration-300 font-bold backdrop-blur-md"
-                    data-filter="video">
-                    VIDEOS
-                </button>
-            </div>
-
-            <!-- Media Count Badge -->
-            <div class="flex justify-center">
-                <div class="media-count-badge" id="media-count-badge" style="display: none;">
-                    <i class="fa-solid fa-images text-party-pink" style="font-size: 14px;"></i>
-                    <span>Showing <span class="count" id="media-count">0</span> items</span>
-                </div>
-            </div>
         </div>
+
+        <a href="#gallery" class="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer z-30 animate-slide-up hover:scale-110 transition-transform duration-300 group" style="animation-delay: 0.7s;">
+            <span class="text-[10px] font-mono text-gray-400 tracking-[0.2em] uppercase group-hover:text-party-cyan transition-colors">Scroll</span>
+            <div class="w-8 h-12 rounded-full border-2 border-white/20 flex justify-center items-start p-1 group-hover:border-party-cyan/50 transition-colors bg-black/20 backdrop-blur-sm">
+                <div class="w-1.5 h-3 bg-gradient-to-b from-party-cyan to-party-pink rounded-full animate-bounce mt-1 shadow-neon-cyan"></div>
+            </div>
+        </a>
     </header>
 
-    <!-- Gallery Section -->
-    <main id="gallery" class="flex-grow relative z-10 px-4 sm:px-6 lg:px-8 pb-32 max-w-[1600px] mx-auto w-full">
-        <!-- Grid Container -->
-        <div id="gallery-grid" class="masonry-grid opacity-0 transition-opacity duration-700">
-            <!-- Items will be injected here by JS -->
+    <main id="gallery" class="flex-grow relative z-10 px-4 sm:px-6 lg:px-8 pb-32 pt-16 max-w-[1600px] mx-auto w-full">
+        
+        <div class="flex flex-wrap justify-center gap-3 sm:gap-4 items-center relative mb-6" style="z-index: 45;">
+            <button onclick="filterGallery('all')"
+                class="filter-btn active px-8 py-3 rounded-full bg-white text-black font-bold hover:scale-105 transition-transform shadow-[0_0_25px_rgba(255,255,255,0.4)] border-2 border-transparent"
+                data-filter="all">
+                ALL VIBES
+            </button>
+            <button onclick="filterGallery('image')"
+                class="filter-btn px-8 py-3 rounded-full bg-black/40 border border-party-cyan/30 text-party-cyan hover:bg-party-cyan hover:text-black hover:shadow-neon-cyan transition-all duration-300 font-bold backdrop-blur-md"
+                data-filter="image">
+                PHOTOS
+            </button>
+            <button onclick="filterGallery('video')"
+                class="filter-btn px-8 py-3 rounded-full bg-black/40 border border-party-pink/30 text-party-pink hover:bg-party-pink hover:text-black hover:shadow-neon-pink transition-all duration-300 font-bold backdrop-blur-md"
+                data-filter="video">
+                VIDEOS
+            </button>
         </div>
+
+        <div class="flex justify-center mb-12">
+            <div class="media-count-badge !mt-0" id="media-count-badge" style="display: none;">
+                <i class="fa-solid fa-images text-party-pink" style="font-size: 14px;"></i>
+                <span>Showing <span class="count" id="media-count">0</span> items</span>
+            </div>
+        </div>
+
+        <div id="gallery-grid" class="masonry-grid opacity-0 transition-opacity duration-700">
+            </div>
     </main>
+
 
     <!-- Floating Music Widget (Visual Only) -->
     <!-- Floating Party Mode Toggle (Animation Control) -->
