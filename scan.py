@@ -1,20 +1,21 @@
 import os
 import json
 from flask import Flask, render_template_string, request, redirect, url_for, send_from_directory, jsonify
+from urllib.parse import unquote
 
 app = Flask(__name__)
 
 # --- CONFIGURATION ---
 MEDIA_DIR = 'media'
 DATA_FILE = 'media.json'
-STUDENT_FILE = 'student.json'
+
 DEFAULT_TITLE = "Farewell Party"
 DEFAULT_DATE = "SOSE '26"
 
 # GitHub LFS URI Configuration
 GITHUB_USERNAME = 'amdivyansh'
 GITHUB_REPO = 'session-2026'
-GITHUB_BRANCH = 'refs/heads/main'
+GITHUB_BRANCH = 'main'
 GITHUB_LFS_BASE = f'https://media.githubusercontent.com/media/{GITHUB_USERNAME}/{GITHUB_REPO}/{GITHUB_BRANCH}'
 
 # Supported Extensions
@@ -42,84 +43,7 @@ HTML_TEMPLATE = """
         .card { background: #1e293b; border: 1px solid #334155; border-radius: 0.75rem; overflow: hidden; }
         .preview-media { max-height: 400px; width: 100%; object-fit: contain; border-radius: 0.5rem; background: #000; }
 
-        /* Student Tag Selector */
-        .tag-selector { position: relative; }
-        .tag-search-input {
-            background: #1e293b; border: 1px solid #334155; color: white;
-            padding: 0.6rem 0.75rem; border-radius: 0.5rem; width: 100%;
-            outline: none; transition: border-color 0.2s; font-size: 0.875rem;
-        }
-        .tag-search-input:focus { border-color: #8b5cf6; }
-        .tag-search-input::placeholder { color: #64748b; }
 
-        .student-dropdown {
-            position: absolute; top: 100%; left: 0; right: 0; z-index: 50;
-            background: #1e293b; border: 1px solid #475569; border-radius: 0.5rem;
-            max-height: 240px; overflow-y: auto; margin-top: 4px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            display: none;
-        }
-        .student-dropdown.open { display: block; }
-
-        .student-dropdown::-webkit-scrollbar { width: 4px; }
-        .student-dropdown::-webkit-scrollbar-track { background: transparent; }
-        .student-dropdown::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 2px; }
-
-        .student-option {
-            display: flex; align-items: center; gap: 10px;
-            padding: 8px 12px; cursor: pointer; transition: background 0.15s;
-            font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.03);
-        }
-        .student-option:hover { background: rgba(99, 102, 241, 0.15); }
-        .student-option.selected { background: rgba(99, 102, 241, 0.2); }
-
-        .student-option .check-box {
-            width: 18px; height: 18px; border-radius: 4px;
-            border: 2px solid #475569; display: flex; align-items: center;
-            justify-content: center; flex-shrink: 0; transition: all 0.15s;
-        }
-        .student-option.selected .check-box {
-            background: #6366f1; border-color: #6366f1;
-        }
-        .student-option .check-box svg {
-            width: 12px; height: 12px; color: white;
-            opacity: 0; transition: opacity 0.15s;
-        }
-        .student-option.selected .check-box svg { opacity: 1; }
-
-        .tag-chips-area {
-            display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; min-height: 28px;
-        }
-        .tag-chip {
-            display: inline-flex; align-items: center; gap: 4px;
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.2));
-            border: 1px solid rgba(99, 102, 241, 0.4);
-            color: #c4b5fd; padding: 3px 10px; border-radius: 20px;
-            font-size: 0.75rem; font-weight: 600; cursor: default;
-            animation: chipIn 0.2s ease-out;
-        }
-        .tag-chip .remove-chip {
-            cursor: pointer; margin-left: 2px; opacity: 0.6;
-            transition: opacity 0.15s; font-size: 14px; line-height: 1;
-        }
-        .tag-chip .remove-chip:hover { opacity: 1; color: #f87171; }
-
-        @keyframes chipIn {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        .no-match {
-            padding: 16px; text-align: center; color: #64748b; font-size: 0.8rem;
-        }
-
-        .student-count-badge {
-            position: absolute; top: -6px; right: -6px;
-            background: #6366f1; color: white; font-size: 10px;
-            font-weight: 700; min-width: 18px; height: 18px;
-            border-radius: 9px; display: flex; align-items: center;
-            justify-content: center; padding: 0 5px;
-        }
     </style>
 </head>
 <body class="p-4 md:p-8 max-w-7xl mx-auto">
@@ -220,11 +144,11 @@ HTML_TEMPLATE = """
                         <form action="{{ url_for('save_media') }}" method="POST" id="media-form">
                             <input type="hidden" name="filename" value="{{ filename }}">
                             <input type="hidden" name="file_type" value="{{ file_type }}">
-                            <input type="hidden" name="student_tags" id="student-tags-hidden" value="">
+
 
                             <div class="mb-4">
                                 <label class="block text-xs uppercase text-gray-500 font-bold mb-2">Title / Headline</label>
-                                <input type="text" name="title" class="input-field text-lg font-semibold" value="{{ default_title }}" required autofocus>
+                                <input type="text" name="title" class="input-field text-lg font-semibold" placeholder="Optional title..." autofocus>
                             </div>
 
                             <div class="mb-4">
@@ -232,35 +156,7 @@ HTML_TEMPLATE = """
                                 <input type="text" name="date" class="input-field" value="{{ default_date }}">
                             </div>
 
-                            <!-- Student Tags Multi-Select -->
-                            <div class="mb-4">
-                                <label class="block text-xs uppercase text-gray-500 font-bold mb-2">
-                                    Student Tags
-                                    <span class="text-indigo-400 normal-case font-normal">(click to select)</span>
-                                </label>
-                                <div class="tag-selector" id="tag-selector">
-                                    <div class="relative">
-                                        <input type="text" class="tag-search-input" id="student-search"
-                                            placeholder="🔍 Search students..." autocomplete="off"
-                                            onfocus="openStudentDropdown()" oninput="filterStudents(this.value)">
-                                    </div>
-                                    <div class="student-dropdown" id="student-dropdown">
-                                        {% for student in students %}
-                                        <div class="student-option" data-tag="{{ student.tag }}" data-name="{{ student.name }}" onclick="toggleStudentTag(this)">
-                                            <div class="check-box">
-                                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                                            </div>
-                                            <span>{{ student.name }}</span>
-                                            <span style="margin-left:auto; color:#64748b; font-size:0.7rem;">{{ student.tag }}</span>
-                                        </div>
-                                        {% endfor %}
-                                        <div class="no-match" id="no-match" style="display:none;">No students found</div>
-                                    </div>
-                                    <div class="tag-chips-area" id="tag-chips">
-                                        <!-- Chips rendered by JS -->
-                                    </div>
-                                </div>
-                            </div>
+
 
                             <!-- Additional custom tags -->
                             <div class="mb-4">
@@ -283,86 +179,7 @@ HTML_TEMPLATE = """
             </div>
         </div>
 
-        <script>
-            // --- Student Tag Multi-Select Logic ---
-            const selectedTags = new Set();
 
-            function openStudentDropdown() {
-                document.getElementById('student-dropdown').classList.add('open');
-            }
-
-            function closeStudentDropdown() {
-                document.getElementById('student-dropdown').classList.remove('open');
-            }
-
-            // Close dropdown when clicking outside
-            document.addEventListener('click', (e) => {
-                const selector = document.getElementById('tag-selector');
-                if (selector && !selector.contains(e.target)) {
-                    closeStudentDropdown();
-                }
-            });
-
-            function filterStudents(query) {
-                const dropdown = document.getElementById('student-dropdown');
-                const options = dropdown.querySelectorAll('.student-option');
-                const noMatch = document.getElementById('no-match');
-                const q = query.toLowerCase().trim();
-                let visibleCount = 0;
-
-                options.forEach(opt => {
-                    const name = opt.dataset.name.toLowerCase();
-                    const tag = opt.dataset.tag.toLowerCase();
-                    if (name.includes(q) || tag.includes(q)) {
-                        opt.style.display = '';
-                        visibleCount++;
-                    } else {
-                        opt.style.display = 'none';
-                    }
-                });
-
-                noMatch.style.display = visibleCount === 0 ? '' : 'none';
-                openStudentDropdown();
-            }
-
-            function toggleStudentTag(el) {
-                const tag = el.dataset.tag;
-                if (selectedTags.has(tag)) {
-                    selectedTags.delete(tag);
-                    el.classList.remove('selected');
-                } else {
-                    selectedTags.add(tag);
-                    el.classList.add('selected');
-                }
-                renderChips();
-                syncHiddenField();
-            }
-
-            function removeTag(tag) {
-                selectedTags.delete(tag);
-                // Update option visual
-                document.querySelectorAll('.student-option').forEach(opt => {
-                    if (opt.dataset.tag === tag) opt.classList.remove('selected');
-                });
-                renderChips();
-                syncHiddenField();
-            }
-
-            function renderChips() {
-                const container = document.getElementById('tag-chips');
-                container.innerHTML = '';
-                selectedTags.forEach(tag => {
-                    const chip = document.createElement('span');
-                    chip.className = 'tag-chip';
-                    chip.innerHTML = `${tag} <span class="remove-chip" onclick="event.stopPropagation(); removeTag('${tag}')">&times;</span>`;
-                    container.appendChild(chip);
-                });
-            }
-
-            function syncHiddenField() {
-                document.getElementById('student-tags-hidden').value = JSON.stringify(Array.from(selectedTags));
-            }
-        </script>
     {% endif %}
 
 </body>
@@ -371,15 +188,7 @@ HTML_TEMPLATE = """
 
 # --- HELPERS ---
 
-def load_students():
-    """Load student list from student.json."""
-    if not os.path.exists(STUDENT_FILE):
-        return []
-    try:
-        with open(STUDENT_FILE, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    except (json.JSONDecodeError, IOError):
-        return []
+
 
 def make_lfs_uri(filename):
     """Construct GitHub LFS URI for a media file."""
@@ -390,9 +199,10 @@ def load_data():
     if not os.path.exists(DATA_FILE):
         return []
     try:
-        with open(DATA_FILE, 'r', encoding='utf-8') as f:
+        with open(DATA_FILE, 'r', encoding='utf-8-sig') as f:
             return json.load(f)
-    except json.JSONDecodeError:
+    except (json.JSONDecodeError, IOError) as e:
+        print(f"Error loading {DATA_FILE}: {e}")
         return []
 
 def save_entry(entry):
@@ -419,10 +229,29 @@ def get_untracked_files():
 
     current_data = load_data()
     tracked_files = set()
+    
+    # Check for duplicates in media.json
+    seen_src = {}
+    duplicates = []
+    
     for item in current_data:
         if 'src' in item:
-            # Extract filename from either local path or LFS URI
-            tracked_files.add(os.path.basename(item['src']))
+            src = item['src']
+            # Robust filename extraction: take last part of URL/path and unquote
+            filename = unquote(src.split('/')[-1])
+            tracked_files.add(filename)
+            
+            # Duplicate detection
+            if src in seen_src:
+                duplicates.append(src)
+            else:
+                seen_src[src] = True
+
+    if duplicates:
+        print(f"⚠️  WARNING: Found {len(duplicates)} duplicate entries in {DATA_FILE}!")
+        for d in duplicates[:3]:
+            print(f"   - {d}")
+        if len(duplicates) > 3: print(f"   ...and {len(duplicates)-3} more")
 
     untracked = []
     for f in sorted(all_files):
@@ -466,7 +295,6 @@ def edit_media(filename):
     """Show the form to edit details with student tag selector."""
     _, ext = os.path.splitext(filename)
     file_type = 'image' if ext.lower() in IMAGE_EXTS else 'video'
-    students = load_students()
     lfs_uri = make_lfs_uri(filename)
 
     return render_template_string(HTML_TEMPLATE,
@@ -475,7 +303,6 @@ def edit_media(filename):
                                 file_type=file_type,
                                 default_title=DEFAULT_TITLE,
                                 default_date=DEFAULT_DATE,
-                                students=students,
                                 lfs_uri=lfs_uri,
                                 github_base=GITHUB_LFS_BASE)
 
@@ -488,19 +315,12 @@ def save_media():
     date = request.form.get('date')
     desc = request.form.get('description', '')
 
-    # Process student tags (JSON array from hidden field)
-    student_tags_raw = request.form.get('student_tags', '[]')
-    try:
-        student_tags = json.loads(student_tags_raw)
-    except json.JSONDecodeError:
-        student_tags = []
-
     # Process extra tags (comma separated)
     extra_tags_input = request.form.get('extra_tags', '')
     extra_tags = [t.strip() for t in extra_tags_input.split(',') if t.strip()]
 
     # Combine all tags
-    all_tags = student_tags + extra_tags
+    all_tags = extra_tags
 
     # Build GitHub LFS URI
     lfs_uri = make_lfs_uri(filename)

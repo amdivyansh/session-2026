@@ -23,6 +23,10 @@
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- Lenis Smooth Scroll -->
+    <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.17/dist/lenis.css">
+    <script src="https://unpkg.com/lenis@1.3.17/dist/lenis.min.js"></script>
+
     <!-- Configuration for Tailwind -->
     <script>
         tailwind.config = {
@@ -403,6 +407,28 @@
             }
         }
 
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background-color: #f0f;
+            animation: confetti-fall 5s linear forwards;
+            z-index: 40;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-10vh) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(110vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
         /* Loader */
         .loader-container {
             position: fixed;
@@ -465,525 +491,6 @@
             }
         }
 
-        /* Confetti */
-        .confetti {
-            position: fixed;
-            width: 8px;
-            height: 8px;
-            background-color: #f0f;
-            animation: confetti-fall 5s linear forwards;
-            z-index: 40;
-        }
-
-        @keyframes confetti-fall {
-            0% {
-                transform: translateY(-10vh) rotate(0deg);
-                opacity: 1;
-            }
-
-            100% {
-                transform: translateY(110vh) rotate(720deg);
-                opacity: 0;
-            }
-        }
-
-        /* ========================================
-           STUDENT DROPDOWN STYLES
-           ======================================== */
-        .student-dropdown-wrapper {
-            position: relative;
-            z-index: 45;
-        }
-
-        .student-dropdown-trigger {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 12px 24px;
-            height: 48px;
-            border-radius: 9999px;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(157, 0, 255, 0.3);
-            color: #9D00FF;
-            font-weight: 700;
-            font-family: 'Outfit', sans-serif;
-            font-size: 14px;
-            cursor: pointer;
-            backdrop-filter: blur(12px);
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            white-space: nowrap;
-            box-sizing: border-box;
-        }
-
-        .student-dropdown-trigger:hover {
-            background: rgba(157, 0, 255, 0.15);
-            border-color: rgba(157, 0, 255, 0.6);
-            box-shadow: 0 0 15px rgba(157, 0, 255, 0.3), 0 0 30px rgba(157, 0, 255, 0.1);
-        }
-
-        .student-dropdown-trigger.active {
-            background: white;
-            color: black;
-            border-color: transparent;
-            box-shadow: 0 0 25px rgba(157, 0, 255, 0.4);
-        }
-
-        .student-dropdown-trigger .chevron-icon {
-            transition: transform 0.3s ease;
-            font-size: 11px;
-        }
-
-        .student-dropdown-trigger.open .chevron-icon {
-            transform: rotate(180deg);
-        }
-
-        .student-dropdown-trigger .select-count {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 20px;
-            height: 20px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, #9D00FF, #00F0FF);
-            color: white;
-            font-size: 11px;
-            font-weight: 800;
-            padding: 0 5px;
-        }
-
-
-        /* --- DESKTOP DROPDOWN PANEL (opens UPWARD) --- */
-        .student-dropdown-panel {
-            position: absolute;
-            bottom: calc(100% + 12px);
-            left: 50%;
-            transform: translateX(-50%) translateY(10px);
-            width: 300px;
-            max-height: 0;
-            overflow: hidden;
-            background: rgba(10, 5, 30, 0.97);
-            border: 1px solid rgba(157, 0, 255, 0.25);
-            border-radius: 16px;
-            backdrop-filter: blur(24px);
-            box-shadow: 0 -15px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(157, 0, 255, 0.15);
-            z-index: 9999;
-            opacity: 0;
-            transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-                opacity 0.25s ease,
-                transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .student-dropdown-panel.open {
-            max-height: 380px;
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-            overflow: hidden;
-        }
-
-        /* Arrow pointer at bottom of panel (pointing down to trigger) */
-        .student-dropdown-panel::before {
-            content: '';
-            position: absolute;
-            bottom: -6px;
-            left: 50%;
-            transform: translateX(-50%) rotate(45deg);
-            width: 12px;
-            height: 12px;
-            background: rgba(10, 5, 30, 0.97);
-            border-right: 1px solid rgba(157, 0, 255, 0.25);
-            border-bottom: 1px solid rgba(157, 0, 255, 0.25);
-            z-index: 1;
-        }
-
-        .student-search-box {
-            position: relative;
-            padding: 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-        }
-
-        .student-search-box input {
-            width: 100%;
-            padding: 10px 14px 10px 38px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            color: white;
-            font-family: 'Space Grotesk', monospace;
-            font-size: 14px;
-            outline: none;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-            box-sizing: border-box;
-            -webkit-appearance: none;
-            appearance: none;
-        }
-
-        .student-search-box input::placeholder {
-            color: rgba(255, 255, 255, 0.3);
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        .student-search-box input:focus {
-            border-color: rgba(157, 0, 255, 0.5);
-            box-shadow: 0 0 12px rgba(157, 0, 255, 0.15);
-        }
-
-        .student-search-box .search-icon {
-            position: absolute;
-            left: 24px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: rgba(157, 0, 255, 0.5);
-            font-size: 13px;
-            pointer-events: none;
-        }
-
-        .student-list {
-            max-height: 270px;
-            overflow-y: auto;
-            padding: 6px;
-            overscroll-behavior: contain;
-        }
-
-        .student-list::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .student-list::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .student-list::-webkit-scrollbar-thumb {
-            background: rgba(157, 0, 255, 0.3);
-            border-radius: 2px;
-        }
-
-        .student-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 14px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            position: relative;
-            border: 1px solid transparent;
-        }
-
-        .student-item:hover {
-            background: rgba(157, 0, 255, 0.12);
-        }
-
-        .student-item:active {
-            background: rgba(157, 0, 255, 0.2);
-            transform: scale(0.98);
-        }
-
-        .student-item.selected {
-            background: linear-gradient(135deg, rgba(157, 0, 255, 0.2), rgba(0, 240, 255, 0.1));
-            border: 1px solid rgba(157, 0, 255, 0.3);
-        }
-
-        /* Checkbox indicator for multi-select */
-        .student-item .check-indicator {
-            width: 20px;
-            height: 20px;
-            border-radius: 6px;
-            border: 2px solid rgba(255, 255, 255, 0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            transition: all 0.2s ease;
-            margin-left: auto;
-        }
-
-        .student-item .check-indicator i {
-            font-size: 10px;
-            opacity: 0;
-            transform: scale(0);
-            transition: all 0.2s ease;
-            color: white;
-        }
-
-        .student-item.selected .check-indicator {
-            background: linear-gradient(135deg, #9D00FF, #00F0FF);
-            border-color: transparent;
-        }
-
-        .student-item.selected .check-indicator i {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        .student-item .student-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 13px;
-            flex-shrink: 0;
-            text-transform: uppercase;
-            background: linear-gradient(135deg, rgba(157, 0, 255, 0.4), rgba(0, 240, 255, 0.3));
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .student-item .student-name {
-            font-family: 'Outfit', sans-serif;
-            font-weight: 600;
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.85);
-            transition: color 0.2s ease;
-        }
-
-        .student-item:hover .student-name {
-            color: white;
-        }
-
-        .student-item .student-tag {
-            font-family: 'Space Grotesk', monospace;
-            font-size: 10px;
-            color: rgba(157, 0, 255, 0.6);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            flex-shrink: 0;
-        }
-
-        .student-no-results {
-            text-align: center;
-            padding: 24px 20px;
-            color: rgba(255, 255, 255, 0.3);
-            font-family: 'Space Grotesk', monospace;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        /* Multi-select chips container */
-        .student-chips-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 12px;
-            min-height: 0;
-        }
-
-        .student-active-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 5px 10px 5px 6px;
-            border-radius: 9999px;
-            background: linear-gradient(135deg, rgba(157, 0, 255, 0.25), rgba(0, 240, 255, 0.15));
-            border: 1px solid rgba(157, 0, 255, 0.4);
-            backdrop-filter: blur(12px);
-            animation: slideUp 0.3s ease-out forwards;
-            cursor: default;
-        }
-
-        .student-active-chip .chip-avatar {
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 9px;
-            background: linear-gradient(135deg, #9D00FF, #00F0FF);
-            color: white;
-        }
-
-        .student-active-chip .chip-name {
-            font-family: 'Outfit', sans-serif;
-            font-weight: 600;
-            font-size: 11px;
-            color: white;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .student-active-chip .chip-close {
-            cursor: pointer;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 9px;
-            transition: all 0.2s ease;
-        }
-
-        .student-active-chip .chip-close:hover {
-            background: rgba(255, 0, 255, 0.4);
-            color: white;
-        }
-
-        /* Clear all button */
-        .student-clear-all {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 5px 12px;
-            border-radius: 9999px;
-            background: rgba(255, 0, 255, 0.1);
-            border: 1px solid rgba(255, 0, 255, 0.3);
-            color: rgba(255, 0, 255, 0.8);
-            font-family: 'Space Grotesk', monospace;
-            font-size: 10px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .student-clear-all:hover {
-            background: rgba(255, 0, 255, 0.2);
-            color: white;
-        }
-
-        /* Media count badge */
-        .media-count-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 12px;
-            border-radius: 9999px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            font-family: 'Space Grotesk', monospace;
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.4);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-top: 16px;
-        }
-
-        .media-count-badge .count {
-            color: #00F0FF;
-            font-weight: 700;
-        }
-
-        /* ========================================
-           MOBILE RESPONSIVE
-           ======================================== */
-
-        /* Mobile: normal downward-opening dropdown */
-        @media (max-width: 639px) {
-            .student-dropdown-trigger {
-                padding: 10px 20px;
-                height: 44px;
-                font-size: 13px;
-                gap: 6px;
-                width: 100%;
-            }
-
-            .student-dropdown-wrapper {
-                width: 100%;
-            }
-
-            /* Normal dropdown opening downward on mobile */
-            .student-dropdown-panel {
-                position: absolute;
-                top: calc(100% + 8px);
-                bottom: auto;
-                left: 0;
-                right: 0;
-                transform: translateX(0) translateY(-8px);
-                width: 100%;
-                max-height: 0;
-                border-radius: 16px;
-                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(157, 0, 255, 0.15);
-            }
-
-            .student-dropdown-panel.open {
-                max-height: 55vh;
-                opacity: 1;
-                transform: translateX(0) translateY(0);
-                overflow: hidden;
-            }
-
-            /* Arrow at top pointing up to trigger on mobile */
-            .student-dropdown-panel::before {
-                top: -6px;
-                bottom: auto;
-                left: 50%;
-                transform: translateX(-50%) rotate(45deg);
-                width: 12px;
-                height: 12px;
-                border: none;
-                border-left: 1px solid rgba(157, 0, 255, 0.25);
-                border-top: 1px solid rgba(157, 0, 255, 0.25);
-                border-radius: 0;
-                background: rgba(10, 5, 30, 0.97);
-            }
-
-            .student-search-box {
-                padding: 16px 12px 10px;
-            }
-
-            .student-search-box input {
-                padding: 12px 12px 12px 40px;
-                font-size: 16px;
-                /* Prevents iOS zoom on focus */
-                border-radius: 12px;
-            }
-
-            .student-search-box .search-icon {
-                left: 24px;
-                font-size: 14px;
-            }
-
-            .student-list {
-                max-height: calc(55vh - 80px);
-                overflow-y: auto;
-                padding: 6px;
-            }
-
-            .student-item {
-                padding: 12px 14px;
-                gap: 12px;
-            }
-
-            .student-item .student-avatar {
-                width: 34px;
-                height: 34px;
-                font-size: 14px;
-            }
-
-            .student-item .student-name {
-                font-size: 14px;
-            }
-
-            .student-item .student-tag {
-                font-size: 10px;
-            }
-
-            .student-active-chip .chip-close {
-                width: 22px;
-                height: 22px;
-                font-size: 11px;
-            }
-
-            .student-chips-container {
-                gap: 6px;
-                padding: 0 8px;
-            }
-        }
-
         /* Tablet adjustments */
         @media (min-width: 640px) and (max-width: 1023px) {
             .student-dropdown-panel {
@@ -1037,12 +544,7 @@
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <!-- Animation Toggle -->
-                    <button id="anim-toggle" class="anim-toggle-btn relative" onclick="toggleAnimations()"
-                        title="Toggle Animations">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        <span class="tooltip">Toggle Effects</span>
-                    </button>
+
                     <a href="#gallery"
                         class="hidden sm:inline-flex items-center justify-center px-6 py-2 overflow-hidden font-bold text-white transition-all duration-300 bg-white/5 border border-white/10 rounded-full hover:bg-white/10 group focus:outline-none focus:ring-2 focus:ring-party-cyan focus:ring-offset-2 focus:ring-offset-gray-900">
                         <span
@@ -1107,36 +609,6 @@
                     data-filter="video">
                     VIDEOS
                 </button>
-
-                <!-- Student Filter Dropdown -->
-                <div class="student-dropdown-wrapper" id="student-dropdown-wrapper">
-                    <button class="student-dropdown-trigger" id="student-dropdown-trigger"
-                        onclick="toggleStudentDropdown()">
-                        <i class="fa-solid fa-user-graduate"></i>
-                        <span id="student-trigger-label">STUDENTS</span>
-                        <span class="select-count" id="student-select-count" style="display: none;"></span>
-                        <i class="fa-solid fa-chevron-up chevron-icon"></i>
-                    </button>
-
-                    <div class="student-dropdown-panel" id="student-dropdown-panel">
-                        <!-- Search Box -->
-                        <div class="student-search-box">
-                            <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                            <input type="text" id="student-search-input" placeholder="Search students..."
-                                oninput="filterStudentList(this.value)" autocomplete="off">
-                        </div>
-
-                        <!-- Student List -->
-                        <div class="student-list" id="student-list">
-                            <!-- Items populated by JS -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Active Student Chips (multi-select) -->
-            <div class="student-chips-container" id="student-chips-container">
-                <!-- Chips dynamically rendered by JS -->
             </div>
 
             <!-- Media Count Badge -->
@@ -1158,15 +630,18 @@
     </main>
 
     <!-- Floating Music Widget (Visual Only) -->
-    <div
-        class="fixed bottom-6 right-6 z-40 flex items-center gap-3 bg-black/60 backdrop-blur-xl border border-white/10 px-4 py-2 rounded-full shadow-lg animate-fade-in-up">
-        <div class="flex gap-1 h-4 items-end">
+    <!-- Floating Party Mode Toggle (Animation Control) -->
+    <button id="party-mode-toggle" onclick="toggleAnimations()"
+        class="fixed bottom-6 right-6 z-40 flex items-center gap-3 bg-black/60 backdrop-blur-xl border border-white/10 px-4 py-2 rounded-full shadow-lg animate-fade-in-up cursor:pointer hover:bg-black/80 hover:border-party-pink/50 transition-all active:scale-95 group">
+        <div class="flex gap-1 h-4 items-end" id="party-bars">
             <div class="w-1 bg-party-cyan animate-[equalize_1s_infinite]"></div>
             <div class="w-1 bg-party-pink animate-[equalize_1.2s_infinite]"></div>
             <div class="w-1 bg-party-purple animate-[equalize_0.8s_infinite]"></div>
         </div>
-        <span class="text-xs font-mono text-gray-300 uppercase tracking-widest">Party Mode On</span>
-    </div>
+        <span id="party-text"
+            class="text-xs font-mono text-gray-300 uppercase tracking-widest group-hover:text-white transition-colors">Party
+            Mode On</span>
+    </button>
 
     <!-- Footer -->
     <footer class="border-t border-white/5 bg-black/40 backdrop-blur-lg py-12 relative z-10">
@@ -1249,13 +724,12 @@
     <script>
         // --- DATA (loaded from JSON files) ---
         let galleryData = [];
-        let studentsData = [];
 
         // --- APP STATE ---
         let filteredData = [];
         let currentIndex = 0;
         let currentTypeFilter = 'all';
-        let selectedStudentTags = new Set(); // Multi-select student filter tags
+        let lenis; // Lenis instance
 
         // --- DOM ELEMENTS ---
         const grid = document.getElementById('gallery-grid');
@@ -1268,13 +742,8 @@
         // --- LOAD DATA FROM JSON ---
         async function loadData() {
             try {
-                const [mediaRes, studentRes] = await Promise.all([
-                    fetch('media.json'),
-                    fetch('student.json')
-                ]);
-
+                const mediaRes = await fetch('media.json');
                 const mediaJson = await mediaRes.json();
-                const studentJson = await studentRes.json();
 
                 // Map media.json to gallery format (supports both old `uri` and new `src` field)
                 galleryData = mediaJson.map((item, i) => ({
@@ -1288,14 +757,16 @@
                     tags: item.tags || [],
                 }));
 
-                studentsData = studentJson;
-                populateStudentList(studentsData);
+                // Randomize Array (Fisher-Yates Shuffle)
+                for (let i = galleryData.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [galleryData[i], galleryData[j]] = [galleryData[j], galleryData[i]];
+                }
 
             } catch (err) {
                 console.error('Error loading data:', err);
                 // Fallback: show empty state
                 galleryData = [];
-                studentsData = [];
             }
         }
 
@@ -1307,28 +778,59 @@
             document.body.classList.toggle('animations-off', !animationsEnabled);
             localStorage.setItem('animationsOff', !animationsEnabled);
 
-            const btn = document.getElementById('anim-toggle');
-            if (btn) {
-                btn.classList.toggle('off', !animationsEnabled);
-                btn.querySelector('i').className = animationsEnabled
-                    ? 'fa-solid fa-wand-magic-sparkles'
-                    : 'fa-solid fa-power-off';
-                btn.querySelector('.tooltip').textContent = animationsEnabled
-                    ? 'Disable Effects'
-                    : 'Enable Effects';
+            updatePartyModeUI();
+        }
+
+        function updatePartyModeUI() {
+            const text = document.getElementById('party-text');
+            const bars = document.getElementById('party-bars').children;
+
+            if (animationsEnabled) {
+                text.textContent = "Party Mode On";
+                text.classList.remove('text-gray-500');
+                text.classList.add('text-gray-300');
+
+                // Restart animations
+                bars[0].style.animation = 'equalize 1s infinite';
+                bars[1].style.animation = 'equalize 1.2s infinite';
+                bars[2].style.animation = 'equalize 0.8s infinite';
+
+                // Re-enable confetti/stars if loading for first time or just toggled
+                const stars = document.getElementById('party-stars-container');
+                if (stars) stars.style.display = 'block';
+
+                // Enable Smooth Scroll
+                if (!lenis) {
+                    lenis = new Lenis({ autoRaf: true });
+                }
+
+            } else {
+                text.textContent = "Party Mode Off";
+                text.classList.add('text-gray-500');
+                text.classList.remove('text-gray-300');
+
+                // Stop animations
+                Array.from(bars).forEach(bar => {
+                    bar.style.animation = 'none';
+                    bar.style.height = '40%'; // Static height
+                });
+
+                const stars = document.getElementById('party-stars-container');
+                if (stars) stars.style.display = 'none';
+
+                // Disable Smooth Scroll (Native scroll is faster on low-end)
+                if (lenis) {
+                    lenis.destroy();
+                    lenis = null;
+                }
             }
         }
 
         function initAnimationToggle() {
             if (!animationsEnabled) {
                 document.body.classList.add('animations-off');
-                const btn = document.getElementById('anim-toggle');
-                if (btn) {
-                    btn.classList.add('off');
-                    btn.querySelector('i').className = 'fa-solid fa-power-off';
-                    btn.querySelector('.tooltip').textContent = 'Enable Effects';
-                }
             }
+            updatePartyModeUI();
         }
 
         // --- INITIALIZATION ---
@@ -1428,223 +930,6 @@
         }
 
         // =============================================
-        //  STUDENT DROPDOWN LOGIC (MULTI-SELECT)
-        // =============================================
-        function populateStudentList(students) {
-            const list = document.getElementById('student-list');
-            list.innerHTML = '';
-
-            if (students.length === 0) {
-                list.innerHTML = '<div class="student-no-results">No students found</div>';
-                return;
-            }
-
-            students.forEach(student => {
-                const item = document.createElement('div');
-                const isSelected = selectedStudentTags.has(student.tag);
-                item.className = 'student-item' + (isSelected ? ' selected' : '');
-                item.dataset.tag = student.tag;
-                item.dataset.name = student.name;
-
-                const initials = student.name.charAt(0).toUpperCase();
-
-                item.innerHTML = `
-                    <div class="student-avatar">${initials}</div>
-                    <span class="student-name">${student.name}</span>
-                    <span class="student-tag">${student.tag}</span>
-                    <div class="check-indicator"><i class="fa-solid fa-check"></i></div>
-                `;
-
-                item.addEventListener('click', () => toggleStudent(student));
-                list.appendChild(item);
-            });
-        }
-
-        function toggleStudentDropdown() {
-            const trigger = document.getElementById('student-dropdown-trigger');
-            const panel = document.getElementById('student-dropdown-panel');
-            const input = document.getElementById('student-search-input');
-
-            const isOpen = panel.classList.contains('open');
-
-            if (isOpen) {
-                closeStudentDropdown();
-            } else {
-                panel.classList.add('open');
-                trigger.classList.add('open');
-                input.value = '';
-                filterStudentList('');
-                setTimeout(() => input.focus(), 150);
-            }
-        }
-
-        function closeStudentDropdown() {
-            const trigger = document.getElementById('student-dropdown-trigger');
-            const panel = document.getElementById('student-dropdown-panel');
-            panel.classList.remove('open');
-            trigger.classList.remove('open');
-        }
-
-        function filterStudentList(query) {
-            const list = document.getElementById('student-list');
-            const normalizedQuery = query.toLowerCase().trim();
-
-            const matched = studentsData.filter(s =>
-                s.name.toLowerCase().includes(normalizedQuery) ||
-                s.tag.toLowerCase().includes(normalizedQuery)
-            );
-
-            list.innerHTML = '';
-
-            if (matched.length === 0) {
-                list.innerHTML = '<div class="student-no-results"><i class="fa-solid fa-ghost" style="font-size: 18px; margin-bottom: 6px; display: block; opacity: 0.3;"></i>No match found</div>';
-                return;
-            }
-
-            matched.forEach(student => {
-                const item = document.createElement('div');
-                const isSelected = selectedStudentTags.has(student.tag);
-                item.className = 'student-item' + (isSelected ? ' selected' : '');
-                item.dataset.tag = student.tag;
-                item.dataset.name = student.name;
-
-                const initials = student.name.charAt(0).toUpperCase();
-
-                item.innerHTML = `
-                    <div class="student-avatar">${initials}</div>
-                    <span class="student-name">${highlightMatch(student.name, normalizedQuery)}</span>
-                    <span class="student-tag">${student.tag}</span>
-                    <div class="check-indicator"><i class="fa-solid fa-check"></i></div>
-                `;
-
-                item.addEventListener('click', () => toggleStudent(student));
-                list.appendChild(item);
-            });
-        }
-
-        function highlightMatch(text, query) {
-            if (!query) return text;
-            const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-            return text.replace(regex, '<span style="color: #00F0FF; font-weight: 800;">$1</span>');
-        }
-
-        // Toggle a student in/out of multi-select
-        function toggleStudent(student) {
-            if (selectedStudentTags.has(student.tag)) {
-                selectedStudentTags.delete(student.tag);
-            } else {
-                selectedStudentTags.add(student.tag);
-            }
-
-            // Re-render the list to update checkbox states
-            const searchInput = document.getElementById('student-search-input');
-            filterStudentList(searchInput ? searchInput.value : '');
-
-            // Update UI
-            updateTriggerState();
-            renderStudentChips();
-            applyFilters();
-        }
-
-        // Remove a single student tag (from chip close button)
-        function removeStudentTag(tag) {
-            selectedStudentTags.delete(tag);
-            updateTriggerState();
-            renderStudentChips();
-            applyFilters();
-
-            // If dropdown is open, re-render list
-            const panel = document.getElementById('student-dropdown-panel');
-            if (panel && panel.classList.contains('open')) {
-                const searchInput = document.getElementById('student-search-input');
-                filterStudentList(searchInput ? searchInput.value : '');
-            }
-        }
-
-        // Clear all student filters
-        function clearAllStudentTags() {
-            selectedStudentTags.clear();
-            updateTriggerState();
-            renderStudentChips();
-            applyFilters();
-
-            // If dropdown is open, re-render list
-            const panel = document.getElementById('student-dropdown-panel');
-            if (panel && panel.classList.contains('open')) {
-                const searchInput = document.getElementById('student-search-input');
-                filterStudentList(searchInput ? searchInput.value : '');
-            }
-        }
-
-        // Update trigger button badge and active state
-        function updateTriggerState() {
-            const trigger = document.getElementById('student-dropdown-trigger');
-            const countBadge = document.getElementById('student-select-count');
-            const count = selectedStudentTags.size;
-
-            if (count > 0) {
-                trigger.classList.add('active');
-                countBadge.textContent = count;
-                countBadge.style.display = 'inline-flex';
-            } else {
-                trigger.classList.remove('active');
-                countBadge.style.display = 'none';
-            }
-        }
-
-        // Render chips for all selected students
-        function renderStudentChips() {
-            const container = document.getElementById('student-chips-container');
-            container.innerHTML = '';
-
-            if (selectedStudentTags.size === 0) return;
-
-            selectedStudentTags.forEach(tag => {
-                const student = studentsData.find(s => s.tag === tag);
-                if (!student) return;
-
-                const chip = document.createElement('div');
-                chip.className = 'student-active-chip';
-                chip.innerHTML = `
-                    <div class="chip-avatar">${student.name.charAt(0).toUpperCase()}</div>
-                    <span class="chip-name">${student.name}</span>
-                    <div class="chip-close" onclick="removeStudentTag('${tag}')" title="Remove ${student.name}">
-                        <i class="fa-solid fa-xmark"></i>
-                    </div>
-                `;
-                container.appendChild(chip);
-            });
-
-            // Add "Clear All" button if 2+ selected
-            if (selectedStudentTags.size >= 2) {
-                const clearBtn = document.createElement('div');
-                clearBtn.className = 'student-clear-all';
-                clearBtn.onclick = clearAllStudentTags;
-                clearBtn.innerHTML = '<i class="fa-solid fa-xmark"></i> Clear All';
-                container.appendChild(clearBtn);
-            }
-        }
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', (e) => {
-            const wrapper = document.getElementById('student-dropdown-wrapper');
-            const panel = document.getElementById('student-dropdown-panel');
-            if (wrapper && panel && panel.classList.contains('open') && !wrapper.contains(e.target)) {
-                closeStudentDropdown();
-            }
-        });
-
-        // Close dropdown on Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                const panel = document.getElementById('student-dropdown-panel');
-                if (panel && panel.classList.contains('open')) {
-                    closeStudentDropdown();
-                }
-            }
-        });
-
-        // =============================================
         //  COMBINED FILTER LOGIC
         // =============================================
         function applyFilters() {
@@ -1655,19 +940,12 @@
                 data = data.filter(item => item.type === currentTypeFilter);
             }
 
-            // Student multi-select filter (OR logic: show media matching ANY selected tag)
-            if (selectedStudentTags.size > 0) {
-                data = data.filter(item =>
-                    item.tags && item.tags.some(tag => selectedStudentTags.has(tag))
-                );
-            }
-
             filteredData = data;
 
             // Update media count badge
             const badge = document.getElementById('media-count-badge');
             const countEl = document.getElementById('media-count');
-            if (selectedStudentTags.size > 0 || currentTypeFilter !== 'all') {
+            if (currentTypeFilter !== 'all') {
                 badge.style.display = 'inline-flex';
                 countEl.textContent = filteredData.length;
             } else {
@@ -1728,13 +1006,7 @@
                         <!-- Content -->
                         <div class="absolute bottom-0 left-0 w-full p-6 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
                             <span class="inline-block px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider bg-party-pink/20 text-party-pink border border-party-pink/30 mb-2 backdrop-blur-md shadow-lg">${item.date}</span>
-                            <h3 class="font-display text-2xl text-white leading-none drop-shadow-md group-hover:text-party-cyan transition-colors">${item.title}</h3>
-                            ${item.tags && item.tags.length > 0 ? `
-                                <div class="flex flex-wrap gap-1 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                    ${item.tags.slice(0, 3).map(tag => `<span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-gray-400">${tag}</span>`).join('')}
-                                    ${item.tags.length > 3 ? `<span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-gray-400">+${item.tags.length - 3}</span>` : ''}
-                                </div>
-                            ` : ''}
+                            ${item.title && item.title.trim() ? `<h3 class="font-display text-2xl text-white leading-none drop-shadow-md group-hover:text-party-cyan transition-colors mb-2">${item.title}</h3>` : ''}
                         </div>
                     </div>
                 `;
@@ -1856,8 +1128,15 @@
                 `;
             }
 
-            lightboxTitle.textContent = item.title;
-            lightboxDesc.textContent = item.description + ' • ' + item.date;
+            if (item.title && item.title.trim()) {
+                lightboxTitle.textContent = item.title;
+                lightboxTitle.style.display = 'block';
+            } else {
+                lightboxTitle.textContent = '';
+                lightboxTitle.style.display = 'none';
+            }
+
+            lightboxDesc.textContent = item.description + (item.date ? ' • ' + item.date : '');
         }
 
         function navigate(direction) {
