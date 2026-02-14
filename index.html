@@ -751,7 +751,7 @@
                     type: item.type || 'image',
                     src: item.src || item.uri,
                     thumbnail: item.thumbnail || null,
-                    title: item.title || 'Untitled',
+                    title: item.title || '',
                     description: item.description || '',
                     date: item.date || '',
                     tags: item.tags || [],
@@ -1006,7 +1006,7 @@
                         <!-- Content -->
                         <div class="absolute bottom-0 left-0 w-full p-6 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
                             <span class="inline-block px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider bg-party-pink/20 text-party-pink border border-party-pink/30 mb-2 backdrop-blur-md shadow-lg">${item.date}</span>
-                            ${item.title && item.title.trim() ? `<h3 class="font-display text-2xl text-white leading-none drop-shadow-md group-hover:text-party-cyan transition-colors mb-2">${item.title}</h3>` : ''}
+                            ${item.title && item.title.trim() && item.title !== 'Untitled' ? `<h3 class="font-display text-2xl text-white leading-none drop-shadow-md group-hover:text-party-cyan transition-colors mb-2">${item.title}</h3>` : ''}
                         </div>
                     </div>
                 `;
