@@ -585,7 +585,13 @@
                             Farewell</span>
                     </div>
                 </div>
-                <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-3">
+                    <a href="students.html"
+                        class="inline-flex items-center justify-center px-4 py-2 overflow-hidden font-bold text-white transition-all duration-300 bg-white/5 border border-white/10 rounded-full hover:bg-party-cyan/20 group focus:outline-none focus:ring-2 focus:ring-party-cyan focus:ring-offset-2 focus:ring-offset-gray-900 border-party-cyan/30">
+                        <span class="relative text-xs tracking-widest flex items-center gap-2 text-party-cyan">
+                            THE BATCH
+                        </span>
+                    </a>
 
                     <a href="#gallery"
                         class="hidden sm:inline-flex items-center justify-center px-6 py-2 overflow-hidden font-bold text-white transition-all duration-300 bg-white/5 border border-white/10 rounded-full hover:bg-white/10 group focus:outline-none focus:ring-2 focus:ring-party-cyan focus:ring-offset-2 focus:ring-offset-gray-900">
@@ -630,6 +636,17 @@
                 <span class="text-party-cyan font-semibold drop-shadow-[0_0_8px_rgba(0,240,255,0.5)]">Dress up, show up,
                     and never forget.</span>
             </p>
+
+            <div class="mt-8 animate-slide-up" style="animation-delay: 0.6s;">
+                <a href="students.html"
+                    class="inline-flex items-center gap-3 px-8 py-4 bg-white/5 border border-white/10 rounded-full hover:bg-white/10 hover:border-party-cyan/50 transition-all duration-300 group backdrop-blur-sm">
+                    <span
+                        class="font-display text-lg tracking-wide text-white group-hover:text-party-cyan transition-colors">MEET
+                        THE BATCH</span>
+                    <i
+                        class="fa-solid fa-arrow-right text-party-pink group-hover:translate-x-1 transition-transform"></i>
+                </a>
+            </div>
         </div>
 
         <a href="#gallery"
@@ -647,12 +664,20 @@
     </header>
 
     <main id="gallery" class="flex-grow relative z-10 px-4 sm:px-6 lg:px-8 pb-32 pt-16 max-w-[1600px] mx-auto w-full">
+        <!-- Filters -->
+        <!-- Date Filters (Parent Filter) -->
+        <div class="mb-6 overflow-x-auto pb-2 scrollbar-hide">
+            <div id="date-filters" class="flex justify-start sm:justify-center gap-2 sm:gap-4 px-4 min-w-max">
+                <!-- Date buttons injected via JS -->
+            </div>
+        </div>
 
-        <div class="flex flex-wrap justify-center gap-3 sm:gap-4 items-center relative mb-6" style="z-index: 45;">
+        <!-- Type Filters -->
+        <div class="flex flex-wrap justify-center gap-4 mb-8 sticky top-20 z-30 pt-4 pb-2 backdrop-blur-sm rounded-xl">
             <button onclick="filterGallery('all')"
-                class="filter-btn active px-8 py-3 rounded-full bg-white text-black font-bold hover:scale-105 transition-transform shadow-[0_0_25px_rgba(255,255,255,0.4)] border-2 border-transparent"
+                class="filter-btn px-8 py-3 rounded-full bg-white text-black shadow-neon-cyan scale-105 transition-all duration-300 font-bold tracking-wider"
                 data-filter="all">
-                ALL VIBES
+                ALL
             </button>
             <button onclick="filterGallery('image')"
                 class="filter-btn px-8 py-3 rounded-full bg-black/40 border border-party-cyan/30 text-party-cyan hover:bg-party-cyan hover:text-black hover:shadow-neon-cyan transition-all duration-300 font-bold backdrop-blur-md"
@@ -773,6 +798,8 @@
         let filteredData = [];
         let currentIndex = 0;
         let currentTypeFilter = 'all';
+        let currentDateFilter = 'all'; // Default (will be set to most common)
+        let uniqueDates = [];
         let lenis; // Lenis instance
 
         // --- DOM ELEMENTS ---
@@ -812,6 +839,27 @@
                 // Fallback: show empty state
                 galleryData = [];
             }
+
+            // Extract Unique Dates & Find Most Common
+            const dateCounts = {};
+            galleryData.forEach(item => {
+                if (item.date && item.date.trim() !== "") {
+                    dateCounts[item.date] = (dateCounts[item.date] || 0) + 1;
+                }
+            });
+
+            uniqueDates = Object.keys(dateCounts).sort((a, b) => dateCounts[b] - dateCounts[a]); // Sort by frequency desc
+
+            // Set Default Parent Filter
+            if (uniqueDates.length > 0) {
+                // The request specifically asked for "most common" to be the parent filter.
+                // We will set the first one as default if we want auto-select, or allow 'all'.
+                // Let's default to the absolute most common one.
+                currentDateFilter = uniqueDates[0];
+            }
+
+            renderDateFilters();
+            applyFilters(); // Initial Filter
         }
 
         // --- ANIMATION TOGGLE ---
@@ -975,28 +1023,84 @@
 
         // =============================================
         //  COMBINED FILTER LOGIC
-        // =============================================
+        // =============================================        // --- FILTER LOGIC ---
         function applyFilters() {
-            let data = [...galleryData];
+            let data = galleryData;
 
-            // Type filter (all, image, video)
+            // 1. Filter by Date (Parent)
+            if (currentDateFilter !== 'all') {
+                data = data.filter(item => item.date === currentDateFilter);
+            }
+
+            // 2. Filter by Type (Child)
             if (currentTypeFilter !== 'all') {
                 data = data.filter(item => item.type === currentTypeFilter);
             }
 
             filteredData = data;
 
+            // Update UI
+            updateFilterButtons();
+            updateDateButtons();
+
             // Update media count badge
             const badge = document.getElementById('media-count-badge');
             const countEl = document.getElementById('media-count');
-            if (currentTypeFilter !== 'all') {
-                badge.style.display = 'inline-flex';
-                countEl.textContent = filteredData.length;
-            } else {
-                badge.style.display = 'none';
-            }
+
+            // Show count if any filter is active OR if we just want to show total for the active view
+            badge.style.display = 'inline-flex';
+            countEl.textContent = filteredData.length;
 
             renderGallery();
+        }
+
+        function renderDateFilters() {
+            const dateContainer = document.getElementById('date-filters');
+            dateContainer.innerHTML = '';
+
+            // Add 'All Dates' option (Optional, but good UX)
+            // For now, adhering strictly to "make most common a parent filter", implies it's a selectable list.
+
+            // Add "All Events" button
+            const allBtn = document.createElement('button');
+            allBtn.className = `date-btn px-4 py-1.5 rounded-full border text-xs font-mono tracking-wider transition-all whitespace-nowrap ${currentDateFilter === 'all' ? 'bg-party-cyan/20 border-party-cyan text-party-cyan shadow-neon-cyan' : 'bg-white/5 border-white/10 text-gray-400 hover:text-white hover:bg-white/10'}`;
+            allBtn.innerText = "ALL EVENTS";
+            allBtn.onclick = () => filterByDate('all');
+            dateContainer.appendChild(allBtn);
+
+            uniqueDates.forEach(date => {
+                const btn = document.createElement('button');
+                const isActive = date === currentDateFilter;
+                // Style: Active gets highlight, inactive is subtle
+                btn.className = `date-btn px-4 py-1.5 rounded-full border text-xs font-mono tracking-wider transition-all whitespace-nowrap ${isActive ? 'bg-party-cyan/20 border-party-cyan text-party-cyan shadow-neon-cyan' : 'bg-white/5 border-white/10 text-gray-400 hover:text-white hover:bg-white/10'}`;
+                btn.innerText = date;
+                btn.onclick = () => filterByDate(date);
+                dateContainer.appendChild(btn);
+            });
+        }
+
+        function filterByDate(date) {
+            currentDateFilter = date;
+
+            const gridEl = document.getElementById('gallery-grid');
+            gridEl.style.opacity = '0';
+            gridEl.style.transform = 'translateY(10px)';
+
+            setTimeout(() => {
+                applyFilters();
+                gridEl.style.opacity = '1';
+                gridEl.style.transform = 'translateY(0)';
+            }, 300);
+        }
+
+        function updateDateButtons() {
+            const btns = document.querySelectorAll('.date-btn');
+            // We need to re-render or just update classes. Re-rendering is easier given the logic above, 
+            // but let's just update classes to avoid strict re-render flicker if not needed.
+            // Actually, renderDateFilters is simple enough to just call again or we can do manual DOM updates:
+
+            // Simplest: Just re-render to ensure consistency
+            renderDateFilters();
         }
 
         // --- RENDER FUNCTION ---

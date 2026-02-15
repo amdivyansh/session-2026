@@ -10,11 +10,11 @@ MEDIA_DIR = 'media'
 DATA_FILE = 'media.json'
 
 DEFAULT_TITLE = "Farewell Party"
-DEFAULT_DATE = "SOSE '26"
+DEFAULT_DATE = "Teachers' Day"
 
 # --- GITHUB LFS CONFIG ---
 GITHUB_USER = 'amdivyansh'
-GITHUB_REPO = 'session-2026'
+GITHUB_REPO = 'session-2026-data'
 GITHUB_BRANCH = 'main'
 GITHUB_LFS_BASE = f"https://media.githubusercontent.com/media/{GITHUB_USER}/{GITHUB_REPO}/refs/heads/{GITHUB_BRANCH}"
 
@@ -161,7 +161,7 @@ HTML_TEMPLATE = """
                             <!-- Additional custom tags -->
                             <div class="mb-4">
                                 <label class="block text-xs uppercase text-gray-500 font-bold mb-2">Extra Tags <span class="text-gray-600 normal-case font-normal">(comma separated)</span></label>
-                                <input type="text" name="extra_tags" class="input-field" placeholder="dance, stage, group photo">
+                                <input type="text" name="extra_tags" class="input-field" placeholder="dance, stage, group photo" value="{{ extra_tags }}">
                             </div>
 
                             <div class="mb-6">
@@ -301,12 +301,17 @@ def edit_media(filename):
     file_type = 'image' if ext.lower() in IMAGE_EXTS else 'video'
     lfs_uri = make_lfs_uri(filename)
 
+    # Get defaults from query params (for persistence) or config
+    current_date = request.args.get('date', DEFAULT_DATE)
+    current_tags = request.args.get('extra_tags', '')
+
     return render_template_string(HTML_TEMPLATE,
                                 mode='edit',
                                 filename=filename,
                                 file_type=file_type,
                                 default_title=DEFAULT_TITLE,
-                                default_date=DEFAULT_DATE,
+                                default_date=current_date,
+                                extra_tags=current_tags,
                                 lfs_uri=lfs_uri,
                                 github_base=GITHUB_LFS_BASE)
 
@@ -366,7 +371,7 @@ def save_media():
     # Auto-advance to next untracked file
     remaining = get_untracked_files()
     if remaining:
-        return redirect(url_for('edit_media', filename=remaining[0]['name']))
+        return redirect(url_for('edit_media', filename=remaining[0]['name'], date=date, extra_tags=extra_tags_input))
 
     return redirect(url_for('index'))
 
