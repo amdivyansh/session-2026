@@ -1,0 +1,1748 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOSE INA'26 | The Final Party</title>
+    <meta property="og:image"
+        content="https://media.githubusercontent.com/media/amdivyansh/session-2026/refs/heads/main/media/snack%20before%20concert.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1120">
+    <meta property="og:image:height" content="630">
+    <!-- DNS Prefetch for media CDN -->
+    <link rel="dns-prefetch" href="https://media.githubusercontent.com">
+    <link rel="preconnect" href="https://media.githubusercontent.com" crossorigin>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Righteous&family=Outfit:wght@300;400;600;800&family=Great+Vibes&family=Space+Grotesk:wght@300;500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Lenis Smooth Scroll -->
+    <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.17/dist/lenis.css">
+    <script src="https://unpkg.com/lenis@1.3.17/dist/lenis.min.js"></script>
+
+    <!-- Configuration for Tailwind -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        display: ['Righteous', 'cursive'],
+                        script: ['Great Vibes', 'cursive'],
+                        mono: ['Space Grotesk', 'monospace'],
+                    },
+                    colors: {
+                        party: {
+                            bg: '#030014', // Darker, richer black/violet
+                            card: 'rgba(255, 255, 255, 0.03)',
+                            border: 'rgba(255, 255, 255, 0.1)',
+                            pink: '#FF00FF',
+                            purple: '#9D00FF',
+                            cyan: '#00F0FF',
+                            gold: '#FFD700',
+                        }
+                    },
+                    backgroundImage: {
+                        'neon-gradient': 'linear-gradient(to right, #FF00FF, #9D00FF, #00F0FF)',
+                        'disco-gradient': 'radial-gradient(circle at 50% 50%, rgba(157, 0, 255, 0.2), rgba(3, 0, 20, 0))',
+                    },
+                    boxShadow: {
+                        'neon-pink': '0 0 10px rgba(255, 0, 255, 0.5), 0 0 20px rgba(255, 0, 255, 0.3)',
+                        'neon-cyan': '0 0 10px rgba(0, 240, 255, 0.5), 0 0 20px rgba(0, 240, 255, 0.3)',
+                        'card-hover': '0 20px 40px -10px rgba(0,0,0,0.5)',
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'slide-up': 'slideUp 0.8s ease-out forwards',
+                        'spin-slow': 'spin 12s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        glow: {
+                            '0%': { filter: 'drop-shadow(0 0 2px #ff00ff)' },
+                            '100%': { filter: 'drop-shadow(0 0 10px #00eaff)' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(40px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #030014;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* Film Grain Overlay */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Ambient Orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.5;
+            animation: float 10s infinite;
+        }
+
+        /* Animated Party Stars Background */
+        .party-stars-container {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .party-star {
+            position: absolute;
+            border-radius: 50%;
+            animation: starFloat linear infinite, starTwinkle ease-in-out infinite alternate;
+        }
+
+        .party-star.shape-cross {
+            border-radius: 0;
+            background: none !important;
+        }
+
+        .party-star.shape-cross::before,
+        .party-star.shape-cross::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .party-star.shape-cross::before {
+            width: 100%;
+            height: 30%;
+            background: inherit;
+            background: var(--star-color);
+            border-radius: 2px;
+        }
+
+        .party-star.shape-cross::after {
+            width: 30%;
+            height: 100%;
+            background: var(--star-color);
+            border-radius: 2px;
+        }
+
+        .party-star.shape-diamond {
+            border-radius: 2px;
+            transform: rotate(45deg);
+        }
+
+        @keyframes starFloat {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-10vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes starTwinkle {
+            0% {
+                opacity: 0.3;
+                box-shadow: 0 0 4px currentColor;
+            }
+
+            100% {
+                opacity: 1;
+                box-shadow: 0 0 12px currentColor, 0 0 24px currentColor;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #030014;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #FF00FF, #00F0FF);
+            border-radius: 3px;
+        }
+
+        /* Masonry Layout — JS-powered absolute positioning */
+        .masonry-grid {
+            position: relative;
+            width: 100%;
+        }
+
+        .masonry-item {
+            position: absolute;
+            top: 0;
+            left: 0;
+            will-change: transform;
+            transition: transform 0.3s ease;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        /* Cap media height for denser layout */
+        .masonry-item .media-container {
+            max-height: 240px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0a0520;
+            min-height: 120px;
+        }
+
+        .masonry-item .media-container img,
+        .masonry-item .media-container video {
+            width: 100%;
+            height: auto;
+            max-height: 240px;
+            object-fit: cover !important;
+            object-position: center;
+            display: block;
+        }
+
+        @media (min-width: 640px) {
+            .masonry-item .media-container {
+                max-height: 300px;
+            }
+
+            .masonry-item .media-container img,
+            .masonry-item .media-container video {
+                max-height: 300px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .masonry-item .media-container {
+                max-height: 340px;
+            }
+
+            .masonry-item .media-container img,
+            .masonry-item .media-container video {
+                max-height: 340px;
+            }
+        }
+
+        /* Media Loading Skeleton */
+        .media-skeleton {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(110deg, #0a0520 30%, #150a35 50%, #0a0520 70%);
+            background-size: 300% 100%;
+            animation: skeletonPulse 1.5s ease-in-out infinite;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .media-skeleton::after {
+            content: '';
+            width: 32px;
+            height: 32px;
+            border: 3px solid rgba(157, 0, 255, 0.2);
+            border-top-color: rgba(0, 240, 255, 0.6);
+            border-radius: 50%;
+            animation: skeletonSpin 0.8s linear infinite;
+        }
+
+        @keyframes skeletonPulse {
+            0% {
+                background-position: 100% 0;
+            }
+
+            100% {
+                background-position: -100% 0;
+            }
+        }
+
+        @keyframes skeletonSpin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Animation Toggle Button */
+        .anim-toggle-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .anim-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(0, 240, 255, 0.3);
+            color: #00F0FF;
+        }
+
+        .anim-toggle-btn.off {
+            border-color: rgba(255, 0, 255, 0.3);
+            color: #FF00FF;
+        }
+
+        .anim-toggle-btn .tooltip {
+            position: absolute;
+            bottom: -32px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            font-size: 10px;
+            font-family: 'Space Grotesk', monospace;
+            color: rgba(255, 255, 255, 0.5);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 3px 8px;
+            border-radius: 4px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .anim-toggle-btn:hover .tooltip {
+            opacity: 1;
+        }
+
+        /* Animations OFF mode */
+        body.animations-off *,
+        body.animations-off *::before,
+        body.animations-off *::after {
+            animation-duration: 0s !important;
+            animation-delay: 0s !important;
+            transition-duration: 0s !important;
+        }
+
+        body.animations-off .orb,
+        body.animations-off .party-stars-container,
+        body.animations-off .noise-overlay {
+            display: none !important;
+        }
+
+        body.animations-off .media-skeleton {
+            animation: none !important;
+            background: #0a0520 !important;
+        }
+
+        body.animations-off .media-skeleton::after {
+            animation: none !important;
+            border-color: rgba(157, 0, 255, 0.3) !important;
+        }
+
+        /* Disable expensive backdrop-blur on mobile when animations off */
+        @media (max-width: 768px) {
+
+            body.animations-off .backdrop-blur-sm,
+            body.animations-off .backdrop-blur-md,
+            body.animations-off .backdrop-blur-xl,
+            body.animations-off [class*="backdrop-blur"] {
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+            }
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background-color: #f0f;
+            animation: confetti-fall 5s linear forwards;
+            z-index: 40;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-10vh) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(110vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Media Count Badge */
+        .media-count-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 9999px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            font-family: 'Space Grotesk', monospace;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .media-count-badge:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 0, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.2);
+        }
+
+        .media-count-badge i {
+            color: #FF00FF;
+        }
+
+        .media-count-badge .count {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        /* Loader */
+        .loader-container {
+            position: fixed;
+            inset: 0;
+            background: #030014;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .equalizer {
+            display: flex;
+            gap: 4px;
+            height: 40px;
+            align-items: flex-end;
+        }
+
+        .bar {
+            width: 8px;
+            background: linear-gradient(to top, #FF00FF, #00F0FF);
+            animation: equalize 1s ease-in-out infinite;
+        }
+
+        .bar:nth-child(1) {
+            animation-delay: 0.1s;
+            height: 60%;
+        }
+
+        .bar:nth-child(2) {
+            animation-delay: 0.3s;
+            height: 80%;
+        }
+
+        .bar:nth-child(3) {
+            animation-delay: 0.5s;
+            height: 40%;
+        }
+
+        .bar:nth-child(4) {
+            animation-delay: 0.2s;
+            height: 90%;
+        }
+
+        .bar:nth-child(5) {
+            animation-delay: 0.4s;
+            height: 50%;
+        }
+
+        @keyframes equalize {
+
+            0%,
+            100% {
+                height: 20%;
+            }
+
+            50% {
+                height: 100%;
+            }
+        }
+
+        /* Tablet adjustments */
+        @media (min-width: 640px) and (max-width: 1023px) {
+            .student-dropdown-panel {
+                width: 280px;
+            }
+        }
+
+        /* ===== VIDEO INTRO ===== */
+        .intro-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 110;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .intro-layer.active {
+            pointer-events: auto;
+            opacity: 1;
+            visibility: visible;
+            animation: introSwipeIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .intro-layer.swipe-out {
+            animation: introSwipeOut 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .intro-layer video {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        @keyframes introSwipeIn {
+            0% {
+                clip-path: inset(100% 0 0 0);
+                opacity: 1;
+                visibility: visible;
+            }
+
+            100% {
+                clip-path: inset(0 0 0 0);
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+
+        @keyframes introSwipeOut {
+            0% {
+                clip-path: inset(0 0 0 0);
+                opacity: 1;
+            }
+
+            100% {
+                clip-path: inset(0 0 100% 0);
+                opacity: 1;
+                visibility: hidden;
+            }
+        }
+
+        /* Enter Album Button */
+        .enter-btn {
+            display: none;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 40px;
+            border: 1px solid rgba(0, 240, 255, 0.4);
+            border-radius: 9999px;
+            background: rgba(0, 240, 255, 0.08);
+            color: #00F0FF;
+            font-family: 'Righteous', cursive;
+            font-size: 18px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: enterBtnGlow 2s ease-in-out infinite alternate;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .enter-btn:hover {
+            background: rgba(0, 240, 255, 0.15);
+            border-color: rgba(0, 240, 255, 0.7);
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.3), 0 0 60px rgba(255, 0, 255, 0.15);
+        }
+
+        .enter-btn:active {
+            transform: scale(0.97);
+        }
+
+        .enter-btn i {
+            font-size: 14px;
+            transition: transform 0.3s;
+        }
+
+        .enter-btn:hover i {
+            transform: translateX(4px);
+        }
+
+        @keyframes enterBtnGlow {
+            0% {
+                box-shadow: 0 0 15px rgba(0, 240, 255, 0.15), 0 0 30px rgba(0, 240, 255, 0.05);
+            }
+
+            100% {
+                box-shadow: 0 0 20px rgba(255, 0, 255, 0.2), 0 0 40px rgba(255, 0, 255, 0.1);
+                border-color: rgba(255, 0, 255, 0.4);
+                color: #FF00FF;
+            }
+        }
+
+        .enter-btn.visible {
+            display: inline-flex;
+            animation: enterBtnGlow 2s ease-in-out infinite alternate, enterBtnAppear 0.6s ease-out;
+        }
+
+        @keyframes enterBtnAppear {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            0% {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col relative selection:bg-party-pink selection:text-white">
+
+    <!-- Noise Texture -->
+    <div class="noise-overlay"></div>
+
+    <!-- Animated Party Stars Background -->
+    <div class="party-stars-container" id="party-stars-container"></div>
+
+    <!-- Loader -->
+    <div id="loader" class="loader-container">
+        <div class="flex flex-col items-center gap-6">
+            <div class="equalizer" id="loader-equalizer">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+            <p id="loader-text" class="font-mono text-party-cyan text-xs tracking-[0.3em] uppercase animate-pulse">
+                Loading Vibes...</p>
+
+            <!-- Enter Album Header (hidden until ready) -->
+            <div id="enter-header" style="display: none; text-align: center;">
+                <i class="fa-solid fa-star text-party-gold text-sm animate-spin-slow opacity-60"
+                    style="margin-bottom: 12px; display:inline-block;"></i>
+
+                <p class="font-script text-3xl sm:text-5xl text-party-gold opacity-90 drop-shadow-[0_0_10px_rgba(255,215,0,0.5)] mb-2"
+                    style="animation: slideUp 0.6s ease-out both; animation-delay: 0.1s;">
+                    The Final Chapter
+                </p>
+
+                <h1 class="font-display text-5xl sm:text-7xl tracking-tighter leading-[0.9] mb-3"
+                    style="animation: slideUp 0.6s ease-out both; animation-delay: 0.25s;">
+                    <span class="text-white">SOSE INA</span><br>
+                    <span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-party-cyan via-white to-party-pink">BATCH
+                        '26</span>
+                </h1>
+
+                <div class="flex items-center justify-center gap-3 mb-6"
+                    style="animation: slideUp 0.6s ease-out both; animation-delay: 0.4s;">
+                    <div class="h-px w-10 bg-gradient-to-r from-transparent to-party-cyan"></div>
+                    <p class="font-mono text-[10px] text-gray-400 tracking-[0.25em] uppercase">12th Class Farewell</p>
+                    <div class="h-px w-10 bg-gradient-to-l from-transparent to-party-pink"></div>
+                </div>
+            </div>
+
+            <button id="enter-btn" class="enter-btn" onclick="startIntro()">
+                Enter Album <i class="fa-solid fa-arrow-right"></i>
+            </button>
+
+            <!-- Credit -->
+            <p id="loader-credit"
+                style="display: none; margin-top: 24px; font-family: 'Space Grotesk', monospace; font-size: 11px; color: rgba(255,255,255,0.25); letter-spacing: 0.1em; text-transform: uppercase;">
+                Made with <span style="color: #FF00FF; font-size: 13px;">❤</span> by
+                <a href="https://dkydivyansh.com" target="_blank" rel="noopener"
+                    style="color: rgba(255,255,255,0.4); text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.1); transition: all 0.3s;"
+                    onmouseover="this.style.color='#FF00FF'; this.style.borderColor='#FF00FF';"
+                    onmouseout="this.style.color='rgba(255,255,255,0.4)'; this.style.borderColor='rgba(255,255,255,0.1)';">dkydivyansh</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Video Intro Layer -->
+    <div id="intro-layer" class="intro-layer">
+        <video id="intro-video" preload="auto" muted playsinline webkit-playsinline>
+            <source
+                src="https://media.githubusercontent.com/media/amdivyansh/session-2026/refs/heads/main/media/intro.mp4"
+                type="video/mp4">
+        </video>
+    </div>
+
+    <!-- Ambient Lighting -->
+    <div class="orb bg-party-purple w-[600px] h-[600px] top-[-200px] left-[-100px] animate-pulse-slow"></div>
+    <div class="orb bg-party-cyan w-[500px] h-[500px] bottom-[-100px] right-[-100px] animate-pulse-slow"
+        style="animation-delay: 2s;"></div>
+    <div class="orb bg-party-pink w-[300px] h-[300px] top-[40%] left-[30%] opacity-20 animate-float"
+        style="animation-duration: 15s;"></div>
+
+    <!-- Navigation -->
+    <nav
+        class="fixed top-0 w-full z-40 bg-party-bg/60 backdrop-blur-md border-b border-white/5 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center space-x-3 group cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <div class="flex flex-col">
+                        <span
+                            class="font-display text-2xl tracking-widest text-white leading-none group-hover:text-party-pink transition-colors">SOSE
+                            INA
+                            <span class="text-party-cyan">'26</span></span>
+                        <span class="text-[9px] font-mono text-gray-400 tracking-[0.2em] uppercase">12th Class
+                            Farewell</span>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <!-- Replay Intro Button -->
+                    <button onclick="replayIntro()" title="Replay Intro"
+                        class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/5 border border-white/10 hover:bg-party-pink/20 hover:border-party-pink/30 transition-all duration-300 text-gray-400 hover:text-party-pink">
+                        <i class="fa-solid fa-rotate-right text-xs"></i>
+                    </button>
+
+                    <a href="students.html"
+                        class="inline-flex items-center justify-center px-4 py-2 overflow-hidden font-bold text-white transition-all duration-300 bg-white/5 border border-white/10 rounded-full hover:bg-party-cyan/20 group focus:outline-none focus:ring-2 focus:ring-party-cyan focus:ring-offset-2 focus:ring-offset-gray-900 border-party-cyan/30">
+                        <span class="relative text-xs tracking-widest flex items-center gap-2 text-party-cyan">
+                            THE BATCH
+                        </span>
+                    </a>
+
+                    <a href="#gallery"
+                        class="hidden sm:inline-flex items-center justify-center px-6 py-2 overflow-hidden font-bold text-white transition-all duration-300 bg-white/5 border border-white/10 rounded-full hover:bg-white/10 group focus:outline-none focus:ring-2 focus:ring-party-cyan focus:ring-offset-2 focus:ring-offset-gray-900">
+                        <span
+                            class="absolute w-full h-full -mt-10 transition-all duration-1000 transform translate-x-12 bg-white opacity-10 rotate-12 group-hover:-translate-x-40 ease"></span>
+                        <span class="relative text-xs tracking-widest flex items-center gap-2">
+                            OPEN GALLERY <i class="fa-solid fa-arrow-down text-party-pink animate-bounce"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative min-h-screen flex flex-col justify-center items-center px-4 text-center z-20">
+        <div class="max-w-6xl mx-auto relative w-full pt-20">
+
+            <i
+                class="fa-solid fa-star text-party-gold text-2xl absolute -top-10 left-[10%] animate-spin-slow opacity-60"></i>
+            <i class="fa-solid fa-star-of-life text-party-cyan text-xl absolute -bottom-10 right-[15%] animate-spin-slow opacity-60"
+                style="animation-direction: reverse;"></i>
+
+            <div class="relative inline-block mb-4">
+                <p
+                    class="font-script text-4xl sm:text-6xl text-party-gold opacity-90 rotate-[-3deg] drop-shadow-[0_0_10px_rgba(255,215,0,0.5)] animate-slide-up">
+                    The Final Chapter
+                </p>
+            </div>
+
+            <h1
+                class="font-display text-7xl sm:text-8xl md:text-9xl mb-8 leading-[0.9] tracking-tighter drop-shadow-[0_0_25px_rgba(189,0,255,0.4)]">
+                <span class="block text-white animate-slide-up" style="animation-delay: 0.1s;">SOSE INA</span>
+                <span
+                    class="block text-transparent bg-clip-text bg-gradient-to-r from-party-cyan via-white to-party-pink animate-slide-up bg-[length:200%_auto] hover:bg-right transition-all duration-500"
+                    style="animation-delay: 0.3s;">BATCH '26</span>
+            </h1>
+
+            <p class="max-w-2xl mx-auto text-lg md:text-xl text-gray-300 mb-12 font-light leading-relaxed animate-slide-up px-4"
+                style="animation-delay: 0.5s;">
+                Tonight, we trade our uniforms for memories.
+                <span class="text-party-cyan font-semibold drop-shadow-[0_0_8px_rgba(0,240,255,0.5)]">Dress up, show up,
+                    and never forget.</span>
+            </p>
+
+            <div class="mt-8 animate-slide-up" style="animation-delay: 0.6s;">
+                <a href="students.html"
+                    class="inline-flex items-center gap-3 px-8 py-4 bg-white/5 border border-white/10 rounded-full hover:bg-white/10 hover:border-party-cyan/50 transition-all duration-300 group backdrop-blur-sm">
+                    <span
+                        class="font-display text-lg tracking-wide text-white group-hover:text-party-cyan transition-colors">MEET
+                        THE BATCH</span>
+                    <i
+                        class="fa-solid fa-arrow-right text-party-pink group-hover:translate-x-1 transition-transform"></i>
+                </a>
+            </div>
+        </div>
+
+        <a href="#gallery"
+            class="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer z-30 animate-slide-up hover:scale-110 transition-transform duration-300 group"
+            style="animation-delay: 0.7s;">
+            <span
+                class="text-[10px] font-mono text-gray-400 tracking-[0.2em] uppercase group-hover:text-party-cyan transition-colors">Scroll</span>
+            <div
+                class="w-8 h-12 rounded-full border-2 border-white/20 flex justify-center items-start p-1 group-hover:border-party-cyan/50 transition-colors bg-black/20 backdrop-blur-sm">
+                <div
+                    class="w-1.5 h-3 bg-gradient-to-b from-party-cyan to-party-pink rounded-full animate-bounce mt-1 shadow-neon-cyan">
+                </div>
+            </div>
+        </a>
+    </header>
+
+    <main id="gallery" class="flex-grow relative z-10 px-4 sm:px-6 lg:px-8 pb-32 pt-16 max-w-[1600px] mx-auto w-full">
+        <!-- Filters -->
+        <!-- Date Filters (Parent Filter) -->
+        <div class="mb-6 overflow-x-auto pb-2 scrollbar-hide">
+            <div id="date-filters" class="flex flex-wrap justify-center gap-2 sm:gap-4 px-4 w-full">
+                <!-- Date buttons injected via JS -->
+            </div>
+        </div>
+
+        <!-- Type Filters -->
+        <!-- Type Filters -->
+        <div class="flex flex-wrap justify-center gap-4 mb-8 relative z-30 rounded-xl">
+            <button onclick="filterGallery('all')"
+                class="filter-btn px-8 py-3 rounded-full bg-white text-black shadow-neon-cyan scale-105 transition-all duration-300 font-bold tracking-wider"
+                data-filter="all">
+                ALL
+            </button>
+            <button onclick="filterGallery('image')"
+                class="filter-btn px-8 py-3 rounded-full bg-black/40 border border-party-cyan/30 text-party-cyan hover:bg-party-cyan hover:text-black hover:shadow-neon-cyan transition-all duration-300 font-bold backdrop-blur-md"
+                data-filter="image">
+                PHOTOS
+            </button>
+            <button onclick="filterGallery('video')"
+                class="filter-btn px-8 py-3 rounded-full bg-black/40 border border-party-pink/30 text-party-pink hover:bg-party-pink hover:text-black hover:shadow-neon-pink transition-all duration-300 font-bold backdrop-blur-md"
+                data-filter="video">
+                VIDEOS
+            </button>
+        </div>
+
+        <div class="flex justify-center mb-12">
+            <div class="media-count-badge !mt-0" id="media-count-badge" style="display: none;">
+                <i class="fa-solid fa-images text-party-pink" style="font-size: 14px;"></i>
+                <span>Showing <span class="count" id="media-count">0</span> items</span>
+            </div>
+        </div>
+
+        <div id="gallery-grid" class="masonry-grid opacity-0 transition-opacity duration-700">
+        </div>
+
+        <!-- Infinite Scroll Sentinel -->
+        <div id="sentinel" class="h-20 w-full"></div>
+    </main>
+
+
+    <!-- Floating Music Widget (Visual Only) -->
+    <!-- Floating Party Mode Toggle (Animation Control) -->
+    <!-- Floating Buttons Container -->
+    <div class="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3">
+
+        <!-- Scroll To Top (Hidden by default) -->
+        <button id="scroll-top-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+            class="w-12 h-12 rounded-full bg-black/60 backdrop-blur-xl border border-white/10 flex items-center justify-center shadow-lg cursor-pointer hover:bg-party-cyan/20 hover:border-party-cyan hover:shadow-neon-cyan transition-all duration-300 opacity-0 translate-y-4 pointer-events-none data-[visible=true]:opacity-100 data-[visible=true]:translate-y-0 data-[visible=true]:pointer-events-auto">
+            <i class="fa-solid fa-arrow-up text-white"></i>
+        </button>
+
+        <!-- Party Mode Toggle -->
+        <button id="party-mode-toggle" onclick="toggleAnimations()"
+            class="flex items-center gap-3 bg-black/60 backdrop-blur-xl border border-white/10 px-4 py-2 rounded-full shadow-lg animate-fade-in-up cursor:pointer hover:bg-black/80 hover:border-party-pink/50 transition-all active:scale-95 group">
+            <div class="flex gap-1 h-4 items-end" id="party-bars">
+                <div class="w-1 bg-party-cyan animate-[equalize_1s_infinite]"></div>
+                <div class="w-1 bg-party-pink animate-[equalize_1.2s_infinite]"></div>
+                <div class="w-1 bg-party-purple animate-[equalize_0.8s_infinite]"></div>
+            </div>
+            <span id="party-text"
+                class="text-xs font-mono text-gray-300 uppercase tracking-widest group-hover:text-white transition-colors">Party
+                Mode On</span>
+        </button>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/5 bg-black/40 backdrop-blur-lg py-12 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="flex justify-center space-x-6 mb-8">
+                <a href="https://www.instagram.com/_sose.stemsquad_/"
+                    class="group w-12 h-12 rounded-full bg-white/5 border border-white/5 flex items-center justify-center hover:bg-party-pink hover:border-party-pink transition-all duration-300 hover:-translate-y-2">
+                    <i class="fa-brands fa-instagram text-xl text-gray-400 group-hover:text-white"></i>
+                </a>
+            </div>
+            <div class="inline-block px-4 py-1 border border-white/10 rounded-full bg-white/5 mb-4">
+                <p class="font-mono text-xs text-party-gold tracking-[0.2em] uppercase">Est. 2026</p>
+            </div>
+            <div class="mt-4 pt-6 border-t border-white/5">
+                <p class="font-mono text-xs text-gray-600 tracking-wider">
+                    Made with <span class="text-party-pink animate-pulse inline-block">❤️</span> by
+                    <a href="https://dkydivyansh.com" target="_blank" rel="noopener noreferrer"
+                        class="text-party-cyan hover:text-white transition-colors duration-300 font-semibold"
+                        style="text-decoration: none;">dkydivyansh</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox" class="fixed inset-0 z-50 hidden opacity-0 transition-opacity duration-300" aria-modal="true"
+        role="dialog">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/95 backdrop-blur-xl" onclick="closeLightbox()"></div>
+
+        <!-- Controls -->
+        <button
+            class="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/10 hover:bg-party-pink hover:shadow-neon-pink text-white z-50 transition-all flex items-center justify-center group"
+            onclick="closeLightbox()">
+            <i class="fa-solid fa-xmark text-xl group-hover:rotate-90 transition-transform"></i>
+        </button>
+
+        <button
+            class="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-white/5 hover:bg-white/20 border border-white/10 text-white z-50 transition-all hover:scale-110 hidden sm:flex items-center justify-center backdrop-blur-md hover:border-party-cyan/50"
+            onclick="navigate(-1)">
+            <i class="fa-solid fa-chevron-left text-xl"></i>
+        </button>
+
+        <button
+            class="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-white/5 hover:bg-white/20 border border-white/10 text-white z-50 transition-all hover:scale-110 hidden sm:flex items-center justify-center backdrop-blur-md hover:border-party-cyan/50"
+            onclick="navigate(1)">
+            <i class="fa-solid fa-chevron-right text-xl"></i>
+        </button>
+
+        <!-- Content Container -->
+        <div class="absolute inset-0 flex items-center justify-center p-4 sm:p-12 pointer-events-none">
+            <div id="lightbox-content"
+                class="pointer-events-auto relative max-w-full max-h-full flex flex-col items-center">
+                <!-- Media -->
+                <div id="media-container"
+                    class="relative rounded-xl overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.9)] border border-white/10 bg-black ring-1 ring-white/10">
+                    <!-- Image or Video tag goes here -->
+                </div>
+
+                <!-- Caption -->
+                <div id="lightbox-caption"
+                    class="mt-6 text-center max-w-2xl bg-black/40 backdrop-blur-md px-6 py-4 rounded-xl border border-white/5">
+                    <h3 class="font-display text-2xl text-white tracking-wide"></h3>
+                    <div class="flex items-center justify-center gap-2 mt-2">
+                        <div class="h-px w-8 bg-party-cyan"></div>
+                        <p class="font-mono text-party-pink text-xs uppercase tracking-widest"></p>
+                        <div class="h-px w-8 bg-party-cyan"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // --- DATA (loaded from JSON files) ---
+        let galleryData = [];
+
+        // --- APP STATE ---
+        let filteredData = [];
+        let currentIndex = 0;
+        let currentTypeFilter = 'all';
+        let currentDateFilter = 'all'; // Default (will be set to most common)
+        let uniqueDates = [];
+        let lenis; // Lenis instance
+
+        // --- INFINITE SCROLL STATE ---
+        const BATCH_SIZE = 20; // Number of items to load at once
+        let loadedCount = 0;
+        let scrollObserver;
+        let masonryLayoutTimer = null;
+
+        // --- MASONRY LAYOUT ENGINE ---
+        // JS-powered absolute positioning — items never shift once placed
+        function getMasonryColumns() {
+            const w = window.innerWidth;
+            if (w >= 1024) return 4;
+            if (w >= 640) return 2;
+            return 1;
+        }
+
+        function layoutMasonry() {
+            // Debounce: cancel any pending layout
+            if (masonryLayoutTimer) cancelAnimationFrame(masonryLayoutTimer);
+            masonryLayoutTimer = requestAnimationFrame(_doMasonryLayout);
+        }
+
+        function _doMasonryLayout() {
+            const items = grid.querySelectorAll('.masonry-item');
+            if (!items.length) { grid.style.height = '0px'; return; }
+
+            const numCols = getMasonryColumns();
+            const gap = numCols === 1 ? 16 : 20; // 1rem : 1.25rem
+            const containerWidth = grid.clientWidth;
+            const colWidth = (containerWidth - gap * (numCols - 1)) / numCols;
+            const colHeights = new Array(numCols).fill(0);
+
+            items.forEach(item => {
+                // Set width so we can measure height accurately
+                item.style.width = colWidth + 'px';
+
+                // Find the shortest column
+                let shortest = 0;
+                for (let c = 1; c < numCols; c++) {
+                    if (colHeights[c] < colHeights[shortest]) shortest = c;
+                }
+
+                const x = shortest * (colWidth + gap);
+                const y = colHeights[shortest];
+
+                // Position via transform (GPU-accelerated, no reflow)
+                item.style.transform = `translate(${x}px, ${y}px)`;
+
+                // Update column height
+                colHeights[shortest] += item.offsetHeight + gap;
+            });
+
+            // Set container height to tallest column
+            grid.style.height = Math.max(...colHeights) + 'px';
+        }
+
+        // --- DOM ELEMENTS ---
+        const grid = document.getElementById('gallery-grid');
+        const loader = document.getElementById('loader');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxContent = document.getElementById('media-container');
+        const lightboxTitle = document.querySelector('#lightbox-caption h3');
+        const lightboxDesc = document.querySelector('#lightbox-caption p');
+
+        // --- LOAD DATA FROM JSON ---
+        async function loadData() {
+            try {
+                const mediaRes = await fetch('media.json');
+                const mediaJson = await mediaRes.json();
+
+                // Map media.json to gallery format (supports both old `uri` and new `src` field)
+                galleryData = mediaJson.map((item, i) => ({
+                    id: item.id || i + 1,
+                    type: item.type || 'image',
+                    src: item.src || item.uri,
+                    thumbnail: item.thumbnail || null,
+                    title: item.title || '',
+                    description: item.description || '',
+                    date: item.date || '',
+                    tags: item.tags || [],
+                }));
+
+                // Randomize Array (Fisher-Yates Shuffle)
+                for (let i = galleryData.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [galleryData[i], galleryData[j]] = [galleryData[j], galleryData[i]];
+                }
+
+            } catch (err) {
+                console.error('Error loading data:', err);
+                // Fallback: show empty state
+                galleryData = [];
+            }
+
+            // Extract Unique Dates & Find Most Common
+            const dateCounts = {};
+            galleryData.forEach(item => {
+                if (item.date && item.date.trim() !== "") {
+                    dateCounts[item.date] = (dateCounts[item.date] || 0) + 1;
+                }
+            });
+
+            uniqueDates = Object.keys(dateCounts).sort((a, b) => dateCounts[b] - dateCounts[a]); // Sort by frequency desc
+
+            // Set Default Parent Filter
+            if (uniqueDates.length > 0) {
+                // The request specifically asked for "most common" to be the parent filter.
+                // We will set the first one as default if we want auto-select, or allow 'all'.
+                // Let's default to the absolute most common one.
+                currentDateFilter = uniqueDates[0];
+            }
+
+            renderDateFilters();
+            applyFilters(); // Initial Filter
+        }
+
+        // --- ANIMATION TOGGLE ---
+        let animationsEnabled = localStorage.getItem('animationsOff') !== 'true';
+
+        function toggleAnimations() {
+            animationsEnabled = !animationsEnabled;
+            document.body.classList.toggle('animations-off', !animationsEnabled);
+            localStorage.setItem('animationsOff', !animationsEnabled);
+
+            updatePartyModeUI();
+        }
+
+        function updatePartyModeUI() {
+            const text = document.getElementById('party-text');
+            const bars = document.getElementById('party-bars').children;
+
+            if (animationsEnabled) {
+                text.textContent = "Party Mode On";
+                text.classList.remove('text-gray-500');
+                text.classList.add('text-gray-300');
+
+                // Restart animations
+                bars[0].style.animation = 'equalize 1s infinite';
+                bars[1].style.animation = 'equalize 1.2s infinite';
+                bars[2].style.animation = 'equalize 0.8s infinite';
+
+                // Re-enable confetti/stars if loading for first time or just toggled
+                const stars = document.getElementById('party-stars-container');
+                if (stars) stars.style.display = 'block';
+
+                // Enable Smooth Scroll
+                if (!lenis) {
+                    lenis = new Lenis({ autoRaf: true });
+                }
+
+            } else {
+                text.textContent = "Party Mode Off";
+                text.classList.add('text-gray-500');
+                text.classList.remove('text-gray-300');
+
+                // Stop animations
+                Array.from(bars).forEach(bar => {
+                    bar.style.animation = 'none';
+                    bar.style.height = '40%'; // Static height
+                });
+
+                const stars = document.getElementById('party-stars-container');
+                if (stars) stars.style.display = 'none';
+
+                // Disable Smooth Scroll (Native scroll is faster on low-end)
+                if (lenis) {
+                    lenis.destroy();
+                    lenis = null;
+                }
+            }
+        }
+
+        function initAnimationToggle() {
+            if (!animationsEnabled) {
+                document.body.classList.add('animations-off');
+            }
+            updatePartyModeUI();
+        }
+
+        // --- INITIALIZATION ---
+        let introVideoReady = false;
+        let dataReady = false;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            initAnimationToggle();
+            spawnPartyStars();
+
+            const introSeen = localStorage.getItem('introSeen') === 'true';
+
+            if (introSeen) {
+                // Skip intro — directly load data and show page
+                await loadData();
+                const loader = document.getElementById('loader');
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                    grid.classList.remove('opacity-0');
+                    applyFilters();
+                    if (animationsEnabled) triggerConfetti();
+                }, 500);
+                return;
+            }
+
+            // Preload intro video
+            const introVideo = document.getElementById('intro-video');
+            introVideo.addEventListener('canplaythrough', () => {
+                introVideoReady = true;
+                checkAllReady();
+            }, { once: true });
+            // Fallback if already buffered
+            if (introVideo.readyState >= 4) {
+                introVideoReady = true;
+            }
+            introVideo.load();
+
+            // Load gallery data
+            await loadData();
+            dataReady = true;
+            checkAllReady();
+        });
+
+        function checkAllReady() {
+            if (!introVideoReady || !dataReady) return;
+
+            // Hide equalizer, show Enter Album header + button
+            const eq = document.getElementById('loader-equalizer');
+            const text = document.getElementById('loader-text');
+            const header = document.getElementById('enter-header');
+            const btn = document.getElementById('enter-btn');
+            const credit = document.getElementById('loader-credit');
+
+            eq.style.opacity = '0';
+            eq.style.transition = 'opacity 0.4s';
+            text.style.opacity = '0';
+            text.style.transition = 'opacity 0.4s';
+
+            setTimeout(() => {
+                eq.style.display = 'none';
+                text.style.display = 'none';
+                header.style.display = 'block';
+                btn.classList.add('visible');
+                credit.style.display = 'block';
+            }, 400);
+        }
+
+        function startIntro() {
+            const introLayer = document.getElementById('intro-layer');
+            const introVideo = document.getElementById('intro-video');
+            const loader = document.getElementById('loader');
+
+            // Swipe in the video layer
+            introLayer.classList.add('active');
+
+            // Hide loader behind the intro
+            setTimeout(() => {
+                loader.style.display = 'none';
+            }, 700);
+
+            // Play video (try unmuted first, fallback to muted for autoplay policies)
+            introVideo.muted = false;
+            const playPromise = introVideo.play();
+            if (playPromise) {
+                playPromise.catch(() => {
+                    // Autoplay with sound blocked — play muted
+                    introVideo.muted = true;
+                    introVideo.play();
+                });
+            }
+
+            // Start exit animation BEFORE video ends — audio fades out smoothly
+            let exitTriggered = false;
+            const FADE_DURATION = 2; // seconds to fade audio
+            introVideo.addEventListener('timeupdate', () => {
+                const remaining = introVideo.duration - introVideo.currentTime;
+
+                // Smooth audio fade in the last 2 seconds
+                if (remaining <= FADE_DURATION && !introVideo.muted) {
+                    introVideo.volume = Math.max(0, remaining / FADE_DURATION);
+                }
+
+                // Trigger swipe-out with 1s left
+                if (!exitTriggered && remaining <= 1) {
+                    exitTriggered = true;
+                    introLayer.classList.add('swipe-out');
+
+                    setTimeout(() => {
+                        introLayer.style.display = 'none';
+                        introVideo.pause();
+                        introVideo.removeAttribute('src');
+                        introVideo.load(); // Free memory
+
+                        // Mark intro as seen
+                        localStorage.setItem('introSeen', 'true');
+
+                        // Reveal the page
+                        document.body.style.overflow = '';
+                        grid.classList.remove('opacity-0');
+                        applyFilters();
+
+                        if (animationsEnabled) {
+                            triggerConfetti();
+                        }
+                    }, 700);
+                }
+            });
+        }
+
+        function replayIntro() {
+            localStorage.removeItem('introSeen');
+            location.reload();
+        }
+
+        // --- EFFECTS ---
+        function triggerConfetti() {
+            const colors = ['#FF00FF', '#00F0FF', '#FFD700', '#ffffff'];
+            for (let i = 0; i < 60; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                confetti.style.opacity = Math.random();
+                document.body.appendChild(confetti);
+
+                setTimeout(() => confetti.remove(), 5000);
+            }
+        }
+
+        // Animated background party stars
+        function spawnPartyStars() {
+            const container = document.getElementById('party-stars-container');
+            if (!container) return;
+
+            const colors = ['#FF00FF', '#00F0FF', '#FFD700', '#9D00FF', '#ffffff', '#ff66b2', '#66ffcc'];
+            const shapes = ['', 'shape-cross', 'shape-diamond'];
+            const starCount = 35;
+
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const shape = shapes[Math.floor(Math.random() * shapes.length)];
+                const size = Math.random() * 5 + 2; // 2px to 7px
+                const left = Math.random() * 100;
+                const floatDuration = Math.random() * 20 + 15; // 15s to 35s
+                const twinkleDuration = Math.random() * 2 + 1; // 1s to 3s
+                const delay = Math.random() * 25; // stagger start times
+
+                star.className = `party-star ${shape}`;
+                star.style.cssText = `
+                    left: ${left}%;
+                    width: ${size}px;
+                    height: ${size}px;
+                    background: ${shape === 'shape-cross' ? 'none' : color};
+                    color: ${color};
+                    --star-color: ${color};
+                    animation-duration: ${floatDuration}s, ${twinkleDuration}s;
+                    animation-delay: ${delay}s, ${Math.random() * 2}s;
+                `;
+
+                container.appendChild(star);
+            }
+        }
+
+        // TILT EFFECT FUNCTION (disabled on touch devices — saves CPU)
+        const isTouchDevice = window.matchMedia('(hover: none)').matches;
+
+        function addTiltEffect(element) {
+            if (isTouchDevice) return; // Skip on phones/tablets
+
+            element.addEventListener('mousemove', (e) => {
+                const rect = element.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const rotateX = ((y - centerY) / centerY) * -5;
+                const rotateY = ((x - centerX) / centerX) * 5;
+
+                element.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+            });
+
+            element.addEventListener('mouseleave', () => {
+                element.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+            });
+        }
+
+        // =============================================
+        //  COMBINED FILTER LOGIC
+        // =============================================        // --- FILTER LOGIC ---
+        function applyFilters() {
+            let data = galleryData;
+
+            // 1. Filter by Date (Parent)
+            if (currentDateFilter !== 'all') {
+                data = data.filter(item => item.date === currentDateFilter);
+            }
+
+            // 2. Filter by Type (Child)
+            if (currentTypeFilter !== 'all') {
+                data = data.filter(item => item.type === currentTypeFilter);
+            }
+
+            filteredData = data;
+
+            // Update UI
+            updateFilterButtons();
+            updateDateButtons();
+
+            // Update media count badge
+            const badge = document.getElementById('media-count-badge');
+            const countEl = document.getElementById('media-count');
+
+            // Show count if any filter is active OR if we just want to show total for the active view
+            badge.style.display = 'inline-flex';
+            countEl.textContent = filteredData.length;
+
+            renderGallery();
+        }
+
+        function renderDateFilters() {
+            const dateContainer = document.getElementById('date-filters');
+            dateContainer.innerHTML = '';
+
+            // Add 'All Dates' option (Optional, but good UX)
+            // For now, adhering strictly to "make most common a parent filter", implies it's a selectable list.
+
+            // Add "All Events" button
+            const allBtn = document.createElement('button');
+            allBtn.className = `date-btn px-4 py-1.5 rounded-full border text-xs font-mono tracking-wider transition-all whitespace-nowrap ${currentDateFilter === 'all' ? 'bg-party-cyan/20 border-party-cyan text-party-cyan shadow-neon-cyan' : 'bg-white/5 border-white/10 text-gray-400 hover:text-white hover:bg-white/10'}`;
+            allBtn.innerText = "ALL EVENTS";
+            allBtn.onclick = () => filterByDate('all');
+            dateContainer.appendChild(allBtn);
+
+            uniqueDates.forEach(date => {
+                const btn = document.createElement('button');
+                const isActive = date === currentDateFilter;
+                // Style: Active gets highlight, inactive is subtle
+                btn.className = `date-btn px-4 py-1.5 rounded-full border text-xs font-mono tracking-wider transition-all whitespace-nowrap ${isActive ? 'bg-party-cyan/20 border-party-cyan text-party-cyan shadow-neon-cyan' : 'bg-white/5 border-white/10 text-gray-400 hover:text-white hover:bg-white/10'}`;
+                btn.innerText = date;
+                btn.onclick = () => filterByDate(date);
+                dateContainer.appendChild(btn);
+            });
+        }
+
+        function filterByDate(date) {
+            currentDateFilter = date;
+
+            const gridEl = document.getElementById('gallery-grid');
+            gridEl.style.opacity = '0';
+            gridEl.style.transform = 'translateY(10px)';
+
+            setTimeout(() => {
+                applyFilters();
+                gridEl.style.opacity = '1';
+                gridEl.style.transform = 'translateY(0)';
+            }, 300);
+        }
+
+        function updateDateButtons() {
+            const btns = document.querySelectorAll('.date-btn');
+            // We need to re-render or just update classes. Re-rendering is easier given the logic above, 
+            // but let's just update classes to avoid strict re-render flicker if not needed.
+            // Actually, renderDateFilters is simple enough to just call again or we can do manual DOM updates:
+
+            // Simplest: Just re-render to ensure consistency
+            renderDateFilters();
+        }
+
+        // --- RENDER FUNCTION ---
+        function renderGallery() {
+            grid.innerHTML = '';
+            grid.style.height = '0px';
+            loadedCount = 0;
+
+            if (filteredData.length === 0) {
+                grid.innerHTML = `
+                    <div style="text-align: center; padding: 60px 20px;">
+                        <i class="fa-solid fa-face-sad-tear" style="font-size: 48px; color: rgba(157, 0, 255, 0.3); margin-bottom: 16px;"></i>
+                        <p style="font-family: 'Space Grotesk', monospace; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.15em; font-size: 13px;">No media found for this filter</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Initial Batch
+            loadMoreItems();
+
+            // Setup Infinite Scroll
+            setupInfiniteScroll();
+
+            // Update Active Buttons
+            updateFilterButtons();
+        }
+
+        function loadMoreItems() {
+            if (loadedCount >= filteredData.length) return;
+
+            const nextBatch = filteredData.slice(loadedCount, loadedCount + BATCH_SIZE);
+            appendGalleryItems(nextBatch, loadedCount);
+
+            loadedCount += nextBatch.length;
+            setupLazyMedia(); // Re-run lazy loader for new items
+        }
+
+        function appendGalleryItems(items, startIndex) {
+            const fragment = document.createDocumentFragment();
+
+            items.forEach((item, i) => {
+                const index = startIndex + i;
+                const element = document.createElement('div');
+                element.className = 'masonry-item group cursor-pointer';
+                element.onclick = () => openLightbox(index);
+
+                // --- GLASS CARD STYLE ---
+                const innerHTML = `
+                    <div class="tilt-card relative overflow-hidden rounded-xl bg-party-card border border-white/5 backdrop-blur-sm group-hover:border-party-cyan/30 group-hover:shadow-neon-cyan transition-all duration-300">
+                        <!-- Image/Thumbnail Container -->
+                        <div class="media-container relative">
+                            <!-- Loading Skeleton -->
+                            <div class="media-skeleton"></div>
+                            ${item.type === 'video' ? `
+                                ${(item.thumbnail && !item.thumbnail.match(/\.(mp4|mov|webm|ogg)$/i)) ? `
+                                    <img data-src="${item.thumbnail}" alt="${item.title}" loading="lazy" onload="this.parentElement.querySelector('.media-skeleton')?.remove(); layoutMasonry();" onerror="this.parentElement.querySelector('.media-skeleton')?.remove(); layoutMasonry();" class="lazy-media opacity-90 group-hover:opacity-100 transition-opacity duration-700">
+                                ` : `
+                                    <video data-src="${item.src}" preload="none" muted playsinline onloadeddata="this.parentElement.querySelector('.media-skeleton')?.remove(); layoutMasonry();" onerror="this.parentElement.querySelector('.media-skeleton')?.remove(); layoutMasonry();" class="lazy-media opacity-90 group-hover:opacity-100 transition-opacity duration-700"></video>
+                                `}
+                                <div class="absolute inset-0 flex items-center justify-center" style="z-index:3">
+                                    <div class="w-14 h-14 rounded-full bg-black/40 backdrop-blur-xl border border-white/30 flex items-center justify-center group-hover:scale-110 transition-transform shadow-[0_0_30px_rgba(255,0,255,0.4)]">
+                                        <i class="fa-solid fa-play text-white ml-1 text-xl"></i>
+                                    </div>
+                                </div>
+                            ` : `
+                                <img data-src="${item.src}" alt="${item.title}" loading="lazy" onload="this.parentElement.querySelector('.media-skeleton')?.remove(); layoutMasonry();" onerror="this.parentElement.querySelector('.media-skeleton')?.remove(); layoutMasonry();" class="lazy-media opacity-90 group-hover:opacity-100 transition-opacity duration-700">
+                            `}
+                            
+                            <!-- Overlay Gradient -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity"></div>
+                        </div>
+                        
+                        <!-- Content -->
+                        <div class="absolute bottom-0 left-0 w-full p-6 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            <span class="inline-block px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider bg-party-pink/20 text-party-pink border border-party-pink/30 mb-2 backdrop-blur-md shadow-lg">${item.date}</span>
+                            ${item.title && item.title.trim() && item.title !== 'Untitled' ? `<h3 class="font-display text-2xl text-white leading-none drop-shadow-md group-hover:text-party-cyan transition-colors mb-2">${item.title}</h3>` : ''}
+                        </div>
+                    </div>
+                `;
+
+                element.innerHTML = innerHTML;
+
+                // Add 3D Tilt to the inner card (not the outer position wrapper)
+                if (window.innerWidth > 768) {
+                    const card = element.querySelector('.tilt-card');
+                    if (card) addTiltEffect(card);
+                }
+
+                fragment.appendChild(element);
+            });
+
+            // Batch DOM insert — single reflow
+            grid.appendChild(fragment);
+
+            // Calculate positions for the new layout
+            layoutMasonry();
+        }
+
+        function setupInfiniteScroll() {
+            if (scrollObserver) scrollObserver.disconnect();
+
+            scrollObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        loadMoreItems();
+                    }
+                });
+            }, { rootMargin: '400px' });
+
+            const sentinel = document.getElementById('sentinel');
+            if (sentinel) scrollObserver.observe(sentinel);
+        }
+
+        // --- LAZY MEDIA LOADER ---
+        // Only loads video metadata / image src when the card scrolls near the viewport
+        function setupLazyMedia() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+
+                    const el = entry.target;
+                    const src = el.dataset.src;
+                    if (!src) return;
+
+                    if (el.tagName === 'VIDEO') {
+                        // Load only metadata (first frame) — NOT the full video
+                        el.src = src;
+                        el.preload = 'metadata';
+                    } else {
+                        el.src = src;
+                    }
+
+                    el.removeAttribute('data-src');
+                    observer.unobserve(el);
+                });
+            }, {
+                rootMargin: '200px 0px',  // Start loading 200px before entering viewport
+                threshold: 0
+            });
+
+            document.querySelectorAll('.lazy-media[data-src]').forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        function updateFilterButtons() {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if (btn.dataset.filter === currentTypeFilter) {
+                    btn.classList.remove('bg-black/40', 'border-party-cyan/30', 'text-party-cyan', 'border-party-pink/30', 'text-party-pink');
+                    btn.classList.add('bg-white', 'text-black', 'shadow-neon-cyan', 'scale-105');
+                } else {
+                    btn.classList.add('bg-black/40');
+                    btn.classList.remove('bg-white', 'text-black', 'shadow-neon-cyan', 'scale-105');
+
+                    // Re-add specific colors based on original class
+                    if (btn.dataset.filter === 'image') {
+                        btn.classList.add('border-party-cyan/30', 'text-party-cyan');
+                    } else if (btn.dataset.filter === 'video') {
+                        btn.classList.add('border-party-pink/30', 'text-party-pink');
+                    }
+                }
+            });
+        }
+
+        function filterGallery(type) {
+            currentTypeFilter = type;
+
+            const gridEl = document.getElementById('gallery-grid');
+            gridEl.style.opacity = '0';
+            gridEl.style.transform = 'translateY(20px)';
+
+            setTimeout(() => {
+                applyFilters();
+                gridEl.style.opacity = '1';
+                gridEl.style.transform = 'translateY(0)';
+            }, 300);
+        }
+
+        // --- LIGHTBOX FUNCTIONS ---
+        function openLightbox(index) {
+            currentIndex = index;
+            updateLightboxContent();
+            lightbox.classList.remove('hidden');
+            setTimeout(() => { lightbox.classList.remove('opacity-0'); }, 10);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            // Stop any playing video to free memory
+            const vid = lightboxContent.querySelector('video');
+            if (vid) { vid.pause(); vid.removeAttribute('src'); vid.load(); }
+
+            lightbox.classList.add('opacity-0');
+            setTimeout(() => {
+                lightbox.classList.add('hidden');
+                lightboxContent.innerHTML = '';
+            }, 300);
+            document.body.style.overflow = '';
+        }
+
+        function updateLightboxContent() {
+            const item = filteredData[currentIndex];
+            // Stop previous video before switching
+            const prevVid = lightboxContent.querySelector('video');
+            if (prevVid) { prevVid.pause(); prevVid.removeAttribute('src'); prevVid.load(); }
+            lightboxContent.innerHTML = ''; // Clear
+
+            if (item.type === 'video') {
+                lightboxContent.innerHTML = `
+                    <video controls autoplay playsinline class="max-w-full max-h-[80vh] shadow-2xl outline-none bg-black rounded-lg">
+                        <source src="${item.src}" type="video/mp4">
+                    </video>
+                `;
+            } else {
+                lightboxContent.innerHTML = `
+                    <img src="${item.src}" alt="${item.title}" class="max-w-full max-h-[80vh] object-contain shadow-2xl rounded-lg">
+                `;
+            }
+
+            if (item.title && item.title.trim()) {
+                lightboxTitle.textContent = item.title;
+                lightboxTitle.style.display = 'block';
+            } else {
+                lightboxTitle.textContent = '';
+                lightboxTitle.style.display = 'none';
+            }
+
+            lightboxDesc.textContent = item.description + (item.date ? ' • ' + item.date : '');
+        }
+
+        function navigate(direction) {
+            currentIndex += direction;
+            if (currentIndex < 0) currentIndex = filteredData.length - 1;
+            if (currentIndex >= filteredData.length) currentIndex = 0;
+
+            // Fade effect inside modal
+            const container = document.getElementById('media-container');
+            container.style.transform = 'scale(0.95)';
+            container.style.opacity = '0.5';
+
+            setTimeout(() => {
+                updateLightboxContent();
+                container.style.transform = 'scale(1)';
+                container.style.opacity = '1';
+            }, 200);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (lightbox.classList.contains('hidden')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft') navigate(-1);
+            if (e.key === 'ArrowRight') navigate(1);
+        });
+        // Show/Hide Scroll Top Button
+        window.addEventListener('scroll', () => {
+            const btn = document.getElementById('scroll-top-btn');
+            if (window.scrollY > 500) {
+                btn.setAttribute('data-visible', 'true');
+            } else {
+                btn.setAttribute('data-visible', 'false');
+            }
+        });
+
+        // --- RESPONSIVE MASONRY: recalculate on resize ---
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => layoutMasonry(), 150);
+        });
+
+    </script>
+</body>
+
+</html>
+```
