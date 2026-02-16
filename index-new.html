@@ -1205,6 +1205,12 @@
                 return;
             }
 
+            // ── Lock scrolling for the entire intro sequence ──
+            document.body.style.overflow = 'hidden';
+            document.documentElement.style.overflow = 'hidden';
+            // Destroy Lenis during intro so it can't scroll either
+            if (lenis) { lenis.destroy(); lenis = null; }
+
             // Preload intro video
             const introVideo = document.getElementById('intro-video');
             introVideo.addEventListener('canplaythrough', () => {
@@ -1296,8 +1302,15 @@
                         // Mark intro as seen
                         localStorage.setItem('introSeen', 'true');
 
-                        // Reveal the page
+                        // ── Unlock scrolling now that intro is done ──
                         document.body.style.overflow = '';
+                        document.documentElement.style.overflow = '';
+                        // Re-initialise Lenis smooth scroll
+                        if (animationsEnabled && !lenis) {
+                            lenis = new Lenis({ autoRaf: true });
+                        }
+
+                        // Reveal the page
                         grid.classList.remove('opacity-0');
                         applyFilters();
 
