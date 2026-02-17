@@ -1069,7 +1069,7 @@
         // --- LOAD DATA FROM JSON ---
         async function loadData() {
             try {
-                const mediaRes = await fetch('media.json');
+                const mediaRes = await fetch('media.json?t=' + Date.now());
                 const mediaJson = await mediaRes.json();
 
                 // Map media.json to gallery format (supports both old `uri` and new `src` field)
