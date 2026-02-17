@@ -23,10 +23,6 @@
     <meta name="twitter:description" content="12th Class Farewell — Tonight, we trade our uniforms for memories.">
     <meta name="twitter:image" content="https://dkydivyansh.com/wp-content/uploads/2026/02/snack-before-concert.png">
 
-    <!-- DNS Prefetch for media CDN -->
-    <link rel="dns-prefetch" href="https://media.githubusercontent.com">
-    <link rel="preconnect" href="https://media.githubusercontent.com" crossorigin>
-
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -1202,9 +1198,9 @@
             initAnimationToggle();
             spawnPartyStars();
 
-            const introSeen = localStorage.getItem('introSeen') === 'true';
+            const introSeen_v2 = localStorage.getItem('introSeen_v2') === 'true';
 
-            if (introSeen) {
+            if (introSeen_v2) {
                 // Skip intro — directly load data and show page
                 await loadData();
                 const loader = document.getElementById('loader');
@@ -1313,7 +1309,7 @@
                         introVideo.load(); // Free memory
 
                         // Mark intro as seen
-                        localStorage.setItem('introSeen', 'true');
+                        localStorage.setItem('introSeen_v2', 'true');
 
                         // ── Unlock scrolling now that intro is done ──
                         document.body.style.overflow = '';
@@ -1336,7 +1332,7 @@
         }
 
         function replayIntro() {
-            localStorage.removeItem('introSeen');
+            localStorage.removeItem('introSeen_v2');
             location.reload();
         }
 
