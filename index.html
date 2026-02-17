@@ -1115,13 +1115,8 @@
 
             uniqueDates = Object.keys(dateCounts).sort((a, b) => dateCounts[b] - dateCounts[a]); // Sort by frequency desc
 
-            // Set Default Parent Filter
-            if (uniqueDates.length > 0) {
-                // The request specifically asked for "most common" to be the parent filter.
-                // We will set the first one as default if we want auto-select, or allow 'all'.
-                // Let's default to the absolute most common one.
-                currentDateFilter = uniqueDates[0];
-            }
+            // Set Default Parent Filter — show all events by default
+            currentDateFilter = 'all';
 
             renderDateFilters();
             applyFilters(); // Initial Filter
