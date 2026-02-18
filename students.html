@@ -4,6 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Prevent caching of this page -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>The Batch '26 | SOSE INA</title>
 
     <!-- Using same styling and config as home page -->
@@ -380,7 +384,11 @@
         // Load Students
         async function loadStudents() {
             try {
-                const res = await fetch('students.json');
+                const cacheBuster = Date.now();
+                const res = await fetch('students.json?t=' + cacheBuster, {
+                    cache: 'no-store',
+                    headers: { 'Cache-Control': 'no-cache' }
+                });
                 const students = await res.json();
                 const grid = document.getElementById('student-grid');
 
@@ -396,10 +404,11 @@
                 });
 
                 students.forEach((student, index) => {
-                    // Random Avatar Fallback
-                    const imageUrl = student.image && student.image.trim() !== ""
+                    // Random Avatar Fallback + cache-bust all profile images
+                    const rawUrl = student.image && student.image.trim() !== ""
                         ? student.image
                         : `https://api.dicebear.com/9.x/notionists-neutral/svg?seed=${encodeURIComponent(student.name)}`;
+                    const imageUrl = rawUrl + (rawUrl.includes('?') ? '&' : '?') + 'v=' + cacheBuster;
 
                     const taglineHtml = student.tagline ?
                         `<div class="mt-3 px-3 py-1 rounded-full bg-black/40 border border-white/5 inline-block backdrop-blur-md">
